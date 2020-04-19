@@ -1,0 +1,41 @@
+<Page xmlns:gr="http://www.webratio.com/2006/WebML/Graph" xmlns:layout="http://www.webratio.com/2006/WebML/Layout" gr:x="380" gr:y="375" id="sv1#area1#page7" name="Edit Crosswalk">
+  <ContentUnits>
+    <EntryUnit gr:x="0" gr:y="0" id="sv1#area1#page7#enu3" name="Edit" linkOrder="sv1#area1#page7#enu3#ln6" fieldOrder="sv1#area1#page7#enu3#fld13 sv1#area1#page7#enu3#fld14" entity="ent4">
+      <Link id="sv1#area1#page7#enu3#ln6" name="Edit" to="sv1#area1#mfu1" automaticCoupling="true" type="normal" validate="true"/>
+      <Field id="sv1#area1#page7#enu3#fld13" name="Address: " type="string" modifiable="true" attribute="ent4#att13">
+        <VRules>
+          <MandatoryValidationRule id="sv1#area1#page7#enu3#fld13#mnd11" name="mandatory"/>
+          <ValueLengthValidationRule id="sv1#area1#page7#enu3#fld13#vl3" name="length" predicate="max" value="200"/>
+        </VRules>
+      </Field>
+      <Field id="sv1#area1#page7#enu3#fld14" name="State: " type="string" modifiable="true" attribute="ent4#att14">
+        <VRules>
+          <MandatoryValidationRule id="sv1#area1#page7#enu3#fld14#mnd12" name="mandatory"/>
+          <RegularExpressionValidationRule id="sv1#area1#page7#enu3#fld14#regex1" name="regular expression" errorMessage="The state must be either GREEN, RED or FLASHING GREEN" regex="([A-Z])\w+"/>
+        </VRules>
+      </Field>
+    </EntryUnit>
+  </ContentUnits>
+  <layout:Grid containerType="grid">
+    <layout:Row>
+      <layout:Cell colspan="12">
+        <layout:Unit unitId="sv1#area1#page7#enu3">
+          <layout:Link link="sv1#area1#page7#enu3#ln6"/>
+          <layout:Field field="sv1#area1#page7#enu3#fld13"/>
+          <layout:Field field="sv1#area1#page7#enu3#fld14"/>
+        </layout:Unit>
+      </layout:Cell>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+    </layout:Row>
+  </layout:Grid>
+</Page>

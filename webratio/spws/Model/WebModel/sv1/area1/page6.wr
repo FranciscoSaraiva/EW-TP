@@ -1,0 +1,24 @@
+<Page xmlns:gr="http://www.webratio.com/2006/WebML/Graph" xmlns:layout="http://www.webratio.com/2006/WebML/Layout" gr:x="0" gr:y="210" id="sv1#area1#page6" name="Details Crosswalk">
+  <ContentUnits>
+    <QueryUnit id="sv1#area1#page6#qu2" name="Details" customDescriptor="false" gr:x="5" gr:y="0" mode="select" language="SQL" outputsOrder="sv1#area1#page6#qu2#qo12 sv1#area1#page6#qu2#qo11 sv1#area1#page6#qu2#qo14 sv1#area1#page6#qu2#qo13 sv1#area1#page6#qu2#qo1 sv1#area1#page6#qu2#qo2" db="db1">
+      <QueryText xml:space="preserve">SELECT address, state, total_pedestrians, total_vehicles, latitude, longitude
+FROM crosswalk 
+INNER JOIN coordinate
+ON crosswalk.coordinate_oid = coordinate.oid
+WHERE crosswalk.oid = :crosswalkId;</QueryText>
+      <QueryOutput id="sv1#area1#page6#qu2#qo11" name="State" type="string"/>
+      <QueryOutput id="sv1#area1#page6#qu2#qo12" name="Address" type="string"/>
+      <QueryOutput id="sv1#area1#page6#qu2#qo13" name="Total Vehicles" type="integer"/>
+      <QueryOutput id="sv1#area1#page6#qu2#qo14" name="Total Pedestrians" type="integer"/>
+      <QueryInput id="sv1#area1#page6#qu2#qi2" name="crosswalkId" required="true" type="integer"/>
+      <QueryOutput id="sv1#area1#page6#qu2#qo1" name="Latitude"/>
+      <QueryOutput id="sv1#area1#page6#qu2#qo2" name="Longitude"/>
+      <Link id="sv1#area1#page6#qu2#ln10" name="Flow10" to="sv1#area1#page6#qu1" automaticCoupling="true" type="transport" validate="true"/>
+    </QueryUnit>
+    <QueryUnit gr:x="0" gr:y="80" id="sv1#area1#page6#qu1" name="Pedestrians" mode="select" language="SQL" db="db1">
+      <QueryText xml:space="preserve">SELECT distance, email, address FROM distancepedestrian
+INNER JOIN pedestrian
+ON pedestrian.oid = distancepedestrian.pedestrian_oid
+INNER JOIN crosswalk
+ON crosswalk.oid = 1
+</QueryText>      <QueryInput id="sv1#area1#page6#qu1#qi1" name="crosswalkId" required="true" type="integer"/>      <QueryOutput id="sv1#area1#page6#qu1#qo4" name="Distance" type="decimal"/>      <QueryOutput id="sv1#area1#page6#qu1#qo5" name="Email" type="string"/>      <QueryOutput id="sv1#area1#page6#qu1#qo6" name="Address" type="string"/>    </QueryUnit>  </ContentUnits>  <layout:Grid containerType="grid">    <layout:Row>      <layout:Cell colspan="12"/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>    </layout:Row>    <layout:Row>      <layout:Cell colspan="12"/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>    </layout:Row>    <layout:Row>      <layout:Cell colspan="12">        <layout:Unit unitId="sv1#area1#page6#qu2"/>      </layout:Cell>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>    </layout:Row>    <layout:Row>      <layout:Cell colspan="12">        <layout:Unit unitId="sv1#area1#page6#qu1"/>      </layout:Cell>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>    </layout:Row>    <layout:Row>      <layout:Cell colspan="12"/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>    </layout:Row>    <layout:Row>      <layout:Cell colspan="12"/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>      <layout:Cell/>    </layout:Row>  </layout:Grid></Page>

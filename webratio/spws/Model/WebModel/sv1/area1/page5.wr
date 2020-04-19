@@ -1,0 +1,55 @@
+<Page xmlns:gr="http://www.webratio.com/2006/WebML/Graph" xmlns:layout="http://www.webratio.com/2006/WebML/Layout" gr:x="135" gr:y="5" id="sv1#area1#page5" name="Add Crosswalk">
+  <ContentUnits>
+    <EntryUnit gr:x="0" gr:y="0" id="sv1#area1#page5#enu2" name="Add" entity="ent4" linkOrder="sv1#area1#page5#enu2#ln12">
+      <Field id="sv1#area1#page5#enu2#fld1" name="Address: " type="string" modifiable="true" attribute="ent4#att13">
+        <VRules>
+          <MandatoryValidationRule id="sv1#area1#page5#enu2#fld1#mnd1" name="mandatory"/>
+          <ValueLengthValidationRule id="sv1#area1#page5#enu2#fld1#vl1" name="length" predicate="max" value="200"/>
+        </VRules>
+      </Field>
+      <Field id="sv1#area1#page5#enu2#fld5" name="Latitude: " type="float" modifiable="true">
+        <VRules>
+          <MandatoryValidationRule id="sv1#area1#page5#enu2#fld5#mnd3" name="mandatory"/>
+        </VRules>
+      </Field>
+      <Field id="sv1#area1#page5#enu2#fld6" name="Longitude: " type="float" modifiable="true">
+        <VRules>
+          <MandatoryValidationRule id="sv1#area1#page5#enu2#fld6#mnd4" name="mandatory"/>
+        </VRules>
+      </Field>
+      <Link id="sv1#area1#page5#enu2#ln12" name="Add" to="sv1#area1#cru3" type="normal" validate="true">
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par24" name="Key [oid]_Crosswalk.oid(CoordinateToCrosswalk)" source="key.ent4#att4" target="sv1#area1#cru3.rel2#role3.ent4#att4"/>
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par25" name="Latitude: _latitude" source="sv1#area1#page5#enu2#fld5" target="sv1#area1#cru3.ent1#att8"/>
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par26" name="Longitude: _longitude" source="sv1#area1#page5#enu2#fld6" target="sv1#area1#cru3.ent1#att9"/>
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par27" name="Key [oid]_oid" source="key.ent4#att4" target="sv1#area1#cru3.ent1#att1"/>
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par28" name="Address: _PASSING" source="sv1#area1#page5#enu2#fld1" passing="true"/>
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par29" name="Crosswalk Object_PASSING" source="entityBean" passing="true"/>
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par30" name="Key [oid]_PASSING" source="key.ent4#att4" passing="true"/>
+        <LinkParameter id="sv1#area1#page5#enu2#ln12#par31" name="State: _PASSING" source="sv1#area1#page5#enu2#fld2" passing="true"/>
+      </Link>
+    </EntryUnit>
+  </ContentUnits>
+  <layout:Grid containerType="grid">
+    <layout:Row>
+      <layout:Cell colspan="12">
+        <layout:Unit unitId="sv1#area1#page5#enu2">
+          <layout:Link link="sv1#area1#page5#enu2#ln12"/>
+          <layout:Field field="sv1#area1#page5#enu2#fld1"/>
+          <layout:Field field="sv1#area1#page5#enu2#fld5"/>
+          <layout:Field field="sv1#area1#page5#enu2#fld6"/>
+        </layout:Unit>
+      </layout:Cell>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+    </layout:Row>
+  </layout:Grid>
+</Page>

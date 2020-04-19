@@ -1,0 +1,70 @@
+<Page xmlns:gr="http://www.webratio.com/2006/WebML/Graph" xmlns:layout="http://www.webratio.com/2006/WebML/Layout" gr:x="230" gr:y="195" id="sv1#area1#page3" name="Crosswalk List" linkOrder="sv1#area1#page3#ln2">
+  <ContentUnits>
+    <PowerIndexUnit gr:x="0" gr:y="0" id="sv1#area1#page3#pwu1" name="Crosswalks" sortable="true" checkable="false" useCountQuery="false" entity="ent4" displayAttributes="ent4#att13 ent4#att14" linkOrder="sv1#area1#page3#pwu1#ln8 sv1#area1#page3#pwu1#ln7 sv1#area1#page3#pwu1#ln3" gr:showAllParts="false">
+      <Link id="sv1#area1#page3#pwu1#ln7" name="Delete" to="sv1#area1#dlu1" type="normal" validate="true">
+        <LinkParameter id="sv1#area1#page3#pwu1#ln7#par9" name="oid_KeyCondition3 [oid]" source="data[].ent4#att4" target="sv1#area1#dlu1#su3#kcond3.ent4#att4"/>
+        <LinkParameter id="sv1#area1#page3#pwu1#ln7#par10" name="CrosswalkToCoordinate.oid_PASSING" source="data[].rel2#role4_ent1#att1" passing="true"/>
+        <LinkParameter id="sv1#area1#page3#pwu1#ln7#par11" name="oid_PASSING" source="data[].ent4#att4" passing="true"/>
+      </Link>
+      <Link id="sv1#area1#page3#pwu1#ln8" name="Details" to="sv1#area1#page6#qu2" type="normal" validate="true">
+        <LinkParameter id="sv1#area1#page3#pwu1#ln8#par17" name="oid_oid" source="data[].ent4#att4" target="sv1#area1#page6#qu2.sv1#area1#page6#qu2#qi2"/>
+      </Link>
+      <Link id="sv1#area1#page3#pwu1#ln3" name="Edit" to="sv1#area1#page7#enu3" type="normal" validate="true">
+        <LinkParameter id="sv1#area1#page3#pwu1#ln3#par1" name="oid_Key Condition [oid]" source="data[].ent4#att4" target="sv1#area1#page7#enu3.ent4#att4"/>
+      </Link>
+    </PowerIndexUnit>
+  </ContentUnits>
+  <layout:Grid containerType="grid">
+    <layout:Row>
+      <layout:Cell colspan="12"/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+    </layout:Row>
+    <layout:Row>
+      <layout:Cell colspan="12">
+        <layout:Unit unitId="sv1#area1#page3#pwu1">
+          <layout:Attribute attribute="ent4#att13"/>
+          <layout:Attribute attribute="ent4#att14"/>
+          <layout:Link link="sv1#area1#page3#pwu1#ln8"/>
+          <layout:Link link="sv1#area1#page3#pwu1#ln7"/>
+          <layout:Link link="sv1#area1#page3#pwu1#ln3"/>
+        </layout:Unit>
+      </layout:Cell>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+    </layout:Row>
+    <layout:Row>
+      <layout:Cell colspan="12"/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+      <layout:Cell/>
+    </layout:Row>
+  </layout:Grid>
+  <Link id="sv1#area1#page3#ln2" name="Add Crosswalk" to="sv1#area1#page5#enu2" automaticCoupling="true" type="normal" validate="true"/>
+</Page>

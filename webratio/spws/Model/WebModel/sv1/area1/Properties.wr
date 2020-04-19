@@ -1,0 +1,43 @@
+<Area xmlns:gr="http://www.webratio.com/2006/WebML/Graph" gr:x="270" gr:y="-25" id="sv1#area1" name="Crosswalks" landmark="true" defaultPage="sv1#area1#page3">
+  <OperationUnits>
+    <ModifyUnit gr:x="565" gr:y="315" id="sv1#area1#mfu1" name="Edit" entity="ent4">
+      <Selector id="sv1#area1#mfu1#su2" defaultPolicy="fill" booleanOperator="and">
+        <KeyCondition id="sv1#area1#mfu1#su2#kcond2" name="KeyCondition2" predicate="in" implied="false"/>
+      </Selector>
+      <KOLink id="sv1#area1#mfu1#kln2" name="ko" to="sv1#area1#page4#mssu3">
+        <LinkParameter id="sv1#area1#mfu1#kln2#par3" name="An error occured with the database..._Shown Messages" sourceValue="An error occured with the database..." target="sv1#area1#page4#mssu3.shownMessages"/>
+      </KOLink>
+      <OKLink id="sv1#area1#mfu1#oln3" name="OKFlow3" to="sv1#area1#page3" automaticCoupling="true"/>
+    </ModifyUnit>
+    <DeleteUnit gr:x="490" gr:y="215" id="sv1#area1#dlu1" name="Delete" entity="ent4">
+      <Selector id="sv1#area1#dlu1#su3" defaultPolicy="fill" booleanOperator="and">
+        <KeyCondition id="sv1#area1#dlu1#su3#kcond3" name="KeyCondition3" predicate="in" implied="false"/>
+      </Selector>
+      <KOLink id="sv1#area1#dlu1#kln3" name="ko" to="sv1#area1#page4#mssu3">
+        <LinkParameter id="sv1#area1#dlu1#kln3#par4" name="An error occured with the database..._Shown Messages" sourceValue="An error occured with the database..." target="sv1#area1#page4#mssu3.shownMessages"/>
+      </KOLink>
+      <OKLink id="sv1#area1#dlu1#oln2" name="OKFlow2" to="sv1#area1#page3" automaticCoupling="true"/>
+      <CascadeDeleteRole id="sv1#area1#dlu1#cdr1" name="cascade" role="rel2#role4"/>
+    </DeleteUnit>
+    <CreateUnit gr:x="330" gr:y="0" id="sv1#area1#cru3" name="Add" entity="ent1">
+      <OKLink id="sv1#area1#cru3#oln5" name="OKFlow5" to="sv1#area1#cru4">
+        <LinkParameter id="sv1#area1#cru3#oln5#par32" name="Address: _PASSING_address" sourceLinkParameter="sv1#area1#page5#enu2#ln12#par28" target="sv1#area1#cru4.ent4#att13"/>
+        <LinkParameter id="sv1#area1#cru3#oln5#par33" name="oid_Coordinate.oid(CrosswalkToCoordinate)" target="sv1#area1#cru4.rel2#role4.ent1#att1" source="ent1#att1Array"/>
+        <LinkParameter id="sv1#area1#cru3#oln5#par34" name="Crosswalk Object_PASSING_Crosswalk Object" sourceLinkParameter="sv1#area1#page5#enu2#ln12#par29" target="sv1#area1#cru4.entityBeans"/>
+        <LinkParameter id="sv1#area1#cru3#oln5#par35" name="oid_oid" source="ent1#att1Array" target="sv1#area1#cru4.ent4#att4"/>
+        <LinkParameter id="sv1#area1#cru3#oln5#par36" name="State: _PASSING_state" target="sv1#area1#cru4.ent4#att14" sourceValue="GREEN"/>
+        <LinkParameter id="sv1#area1#cru3#oln5#par15" name="total_pedestrians_PASSING_total_pedestrians" target="sv1#area1#cru4.ent4#att15" sourceValue="0"/>
+        <LinkParameter id="sv1#area1#cru3#oln5#par16" name="total_vehicles_PASSING_total_vehicles" target="sv1#area1#cru4.ent4#att16" sourceValue="0"/>
+      </OKLink>
+      <KOLink id="sv1#area1#cru3#kln6" name="KOFlow6" to="sv1#area1#page4#mssu3">
+        <LinkParameter id="sv1#area1#cru3#kln6#par38" name="An error occured with the database..._Shown Messages" sourceValue="An error occured with the database..." target="sv1#area1#page4#mssu3.shownMessages"/>
+      </KOLink>
+    </CreateUnit>
+    <CreateUnit gr:x="445" gr:y="115" id="sv1#area1#cru4" name="Add" entity="ent4">
+      <OKLink id="sv1#area1#cru4#oln6" name="OKFlow6" to="sv1#area1#page3" automaticCoupling="true"/>
+      <KOLink id="sv1#area1#cru4#kln5" name="KOFlow5" to="sv1#area1#page4#mssu3">
+        <LinkParameter id="sv1#area1#cru4#kln5#par39" name="An error occured with the database..._Shown Messages" sourceValue="An error occured with the database..." target="sv1#area1#page4#mssu3.shownMessages"/>
+      </KOLink>
+    </CreateUnit>
+  </OperationUnits>
+</Area>
