@@ -9,7 +9,7 @@
 ##### Instalação
 
 - Criar schema mysql 'spws'
-- Criar os triggers e procedures da pasta spws_db
 - Abrir projeto webratio
 - Sincronizar o modelo para base de dados
+- Criar os triggers e procedures da pasta spws_db
 - Correr o website
