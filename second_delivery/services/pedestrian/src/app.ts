@@ -1,21 +1,25 @@
 import 'reflect-metadata';
 import express from 'express';
-//import cors from 'cors';
+import cors from 'cors';
 import { createConnection } from 'typeorm';
 
 import pedestrianRoutes from './routes/pedestrian';
 
 const app = express();
-/*var corsOptions = {
+
+var corsOptions = {
     origin: "*",
     methods: "*",
-}*/
+}
 
 createConnection().then(async (connection) => {
     console.log('Connected ...')
-})
+    setInterval(() => {
 
-//app.use(cors(corsOptions));
+    }, 5000);
+});
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/pedestrian', pedestrianRoutes);
