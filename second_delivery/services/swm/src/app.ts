@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { createConnection } from 'typeorm';
 
-import pedestrianRoutes from './routes/pedestrian';
+import crosswalkRoutes from './routes/crosswalk';
 
 const app = express();
 
@@ -12,7 +12,7 @@ var corsOptions = {
     methods: "*",
 }
 
-console.log('Service Pedestrian');
+console.log('Service Crosswalk');
 createConnection().then(async (connection) => {
     console.log('Connected ...')
     setInterval(() => {
@@ -23,7 +23,7 @@ createConnection().then(async (connection) => {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use('/pedestrian', pedestrianRoutes);
+app.use('/crosswalk', crosswalkRoutes);
 
-app.listen(3001);
+app.listen(3002);
 
