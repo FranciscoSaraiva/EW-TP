@@ -7,8 +7,8 @@ module.exports = {
     username: process.env.USERNAME,
     password: process.env.PASSWORD,
     database: 'pedestrianDB',
-    synchronize: true,
-    dropSchema: true,
+    synchronize: false,
+    dropSchema: false,
     logging: false,
     entities: [
         "build/models/*.js"
