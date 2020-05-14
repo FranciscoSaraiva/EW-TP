@@ -2,14 +2,7 @@
 
 ##### Tema: Mobilidade
 
-##### Tecnologias:
-- WebRatio
-- MySQL
+##### Deliveries
+- [Primeira Delivery (Webratio)](./first_delivery)
+- [Segunda Delivery (Projeto)](./second_delivery)
 
-##### Instalação
-
-- Criar schema mysql 'spws'
-- Abrir projeto webratio
-- Sincronizar o modelo para base de dados
-- Criar os triggers e procedures da pasta spws_db
-- Correr o website
