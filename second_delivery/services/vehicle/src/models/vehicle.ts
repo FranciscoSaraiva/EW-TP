@@ -15,10 +15,10 @@ export class Vehicle extends BaseEntity {
     @Column({ name: 'license_plate' })
     private license_plate: String;
 
-    @Column({ name: 'coord_x' })
+    @Column({ name: 'coord_x', type: "float", precision: 3, scale: 2 })
     private coord_x: Number;
 
-    @Column({ name: 'coord_y' })
+    @Column({ name: 'coord_y', type: "float", precision: 3, scale: 2 })
     private coord_y: Number;
 
     constructor(brand: String, model: String, license_plate: String, coord_x: Number, coord_y: Number) {
@@ -62,20 +62,20 @@ export class Vehicle extends BaseEntity {
         this.license_plate = license_plate;
     }
 
-    public getCoord_x(): Number {
+    public getCoordX(): Number {
         return this.coord_x;
     }
 
-    public setCoord_x(coord_x: Number): void {
-        this.coord_x = coord_x;
+    public setCoordX(coord_x: Number): void {
+        this.coord_x = +(coord_x.toFixed(6));
     }
 
-    public getCoord_y(): Number {
+    public getCoordY(): Number {
         return this.coord_y;
     }
 
-    public setCoord_y(coord_y: Number): void {
-        this.coord_y = coord_y;
+    public setCoordY(coord_y: Number): void {
+        this.coord_y = +(coord_y.toFixed(6));
     }
 
 }
