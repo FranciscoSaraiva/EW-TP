@@ -4,7 +4,7 @@ module.exports = {
     type: 'mysql',
     host: 'localhost',
     port: 3306,
-    username: process.env.USERNAME,
+    username: process.env.USER,
     password: process.env.PASSWORD,
     database: 'pedestrianDB',
     synchronize: false,
