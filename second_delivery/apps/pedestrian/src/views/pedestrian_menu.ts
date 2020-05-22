@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Pedestrian } from '../models/pedestrian';
 import { GetPedestrians, PostPedestrian } from '../service/pedestrian';
 import { CreateTable } from './application';
@@ -18,7 +17,35 @@ export async function ListPedestrians() {
     var table: Table = CreateTable(['Name', 'Coordinate X', 'Coordinate Y'], pedRows);
     clear();
     console.log(table.toString());
-    MainMenu();
+    ListPedestriansMenu();
+}
+
+function ListPedestriansMenu() {
+    const simulate_pedestrians = chalk.blueBright('Simulate pedestrians');
+    const back = chalk.red('Back');
+
+    inquirer.prompt({
+        type: "list",
+        name: "option",
+        message: "Choose an option: ",
+        choices: [simulate_pedestrians, new inquirer.Separator(), back]
+    })
+        .then(answer => {
+            switch (answer.option) {
+                case simulate_pedestrians:
+                    console.log('simulating placeholder...')
+                    ListPedestriansMenu();
+                    break;
+                case back:
+                    clear();
+                    MainMenu();
+                default:
+                    clear();
+                    MainMenu();
+                    break;
+            }
+        })
+        .catch(err => { console.log(err) })
 }
 
 export async function AddPedestrian() {

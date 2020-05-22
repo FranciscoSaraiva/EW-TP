@@ -5,12 +5,12 @@ export async function GetPedestrians(): Promise<Pedestrian[]> {
     var response: AxiosResponse = await axios.get('//localhost:3001/pedestrian');
     var pedestrians: Pedestrian[] = response.data;
     return pedestrians;
-/*     var peds = [];
-    peds.push(new Pedestrian('André', 0,0));
-    peds.push(new Pedestrian('Chico', 0,0));
-    peds.push(new Pedestrian('Rui', 0,0));
-    
-    return peds; */
+    /*     var peds = [];
+        peds.push(new Pedestrian('André', 0,0));
+        peds.push(new Pedestrian('Chico', 0,0));
+        peds.push(new Pedestrian('Rui', 0,0));
+        
+        return peds; */
 }
 
 export async function PostPedestrian(pedestrian: Pedestrian): Promise<Pedestrian> {

@@ -10,14 +10,14 @@ import { ListPedestrians, AddPedestrian } from './pedestrian_menu';
 const list_pedestrians = chalk.blueBright('Check pedestrians');
 const add_pedestrian = chalk.blueBright('Add pedestrian');
 //---
-const sair = chalk.red('Exit');
+const exit = chalk.red('Exit');
 
 export function MainMenu(): void {
     inquirer.prompt({
         type: "list",
         name: "option",
         message: "Choose an option: ",
-        choices: [list_pedestrians, add_pedestrian, new inquirer.Separator(), sair]
+        choices: [list_pedestrians, add_pedestrian, new inquirer.Separator(), exit]
     })
         .then(answers => {
             switch (answers.option) {
@@ -27,7 +27,7 @@ export function MainMenu(): void {
                 case add_pedestrian:
                     AddPedestrian();
                     break;
-                case sair:
+                case exit:
                     process.exit(0);
                 default:
                     clear();
