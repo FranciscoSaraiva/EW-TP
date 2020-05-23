@@ -13,7 +13,7 @@ var corsOptions = {
 }
 
 console.log('Service Pedestrian');
-createConnection().then(async (connection) => {
+createConnection().then((connection) => {
     console.log('Connected ...');
 });
 
