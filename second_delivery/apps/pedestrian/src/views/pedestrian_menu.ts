@@ -56,7 +56,7 @@ export async function AddPedestrian() {
         .then(async answer => {
             let name: string = answer.name;
             pedestrian = new Pedestrian(name, 0, 0);
-            //await PostPedestrian(pedestrian);
+            await PostPedestrian(pedestrian);
             clear();
             console.log(chalk.green('Pedestrian created!'));
             console.log(chalk.blue('Pedestrian: ') + chalk.magenta(pedestrian.getName()));
