@@ -23,8 +23,8 @@ export async function EditPedestrian(pedestrian: Pedestrian): Promise<Pedestrian
     return pedestrian;
 }
 
-export async function DeletePedestrian(pedestrian: Pedestrian): Promise<Pedestrian> {
-    var response: AxiosResponse = await axios.delete('http://localhost:3001/pedestrian/' + pedestrian.getId());
+export async function DeletePedestrian(id: Number): Promise<Pedestrian> {
+    var response: AxiosResponse = await axios.delete('http://localhost:3001/pedestrian/' + id);
     var pedestrian: Pedestrian = response.data;
     return pedestrian;
 }

@@ -1,5 +1,5 @@
 import { Pedestrian } from '../models/pedestrian';
-import { GetPedestrians, PostPedestrian, EditPedestrian } from '../service/pedestrian';
+import { GetPedestrians, PostPedestrian, EditPedestrian, DeletePedestrian } from '../service/pedestrian';
 import { CreateTable } from './application';
 import Table from 'cli-table';
 import { MainMenu } from './main_menu';
@@ -109,5 +109,25 @@ export async function EditPedestrianView() {
 }
 
 export async function DeletePedestrianView() {
+    var pedestrians: Pedestrian[] = await GetPedestrians();
+    var pedestriansList: any[] = [];
+    for (let index = 0; index < pedestrians.length; index++) {
+        const ped: Pedestrian = pedestrians[index];
+        pedestriansList.push(`${ped.getId()}-${ped.getName()}-${ped.getCoordX()}-${ped.getCoordY()}`)
+    }
 
+    inquirer.prompt({
+        type: "list",
+        name: "pedestrian",
+        message: "Which pedestrian?",
+        choices: pedestriansList
+    })
+        .then(async answers => {
+            let info = answers.pedestrian.split('-');
+            let id: Number = info[0];
+            await DeletePedestrian(id);
+            clear();
+            console.log(`Delete pedestrian with id [${id}]`);
+            MainMenu();
+        }).catch(err => { console.log(err) })
 }

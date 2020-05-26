@@ -33,7 +33,7 @@ export function MainMenu(): void {
                     EditPedestrianView();
                     break;
                 case delete_pedestrian:
-                    AddPedestrianView();
+                    DeletePedestrianView();
                     break;
                 //-------
                 case exit:
