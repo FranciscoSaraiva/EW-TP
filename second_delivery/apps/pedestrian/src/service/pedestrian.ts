@@ -18,7 +18,7 @@ export async function PostPedestrian(pedestrian: Pedestrian): Promise<Pedestrian
 }
 
 export async function EditPedestrian(pedestrian: Pedestrian): Promise<Pedestrian> {
-    var response: AxiosResponse = await axios.put('http://localhost:3001/pedestrian/' + pedestrian.getId());
+    var response: AxiosResponse = await axios.put('http://localhost:3001/pedestrian/' + pedestrian.getId(), pedestrian);
     var pedestrian: Pedestrian = response.data;
     return pedestrian;
 }

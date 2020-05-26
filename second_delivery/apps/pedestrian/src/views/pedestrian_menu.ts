@@ -82,18 +82,30 @@ export async function EditPedestrianView() {
     })
         .then(async answers => {
             let info = answers.pedestrian.split('-');
-
             let id: Number = info[0];
             let name: String = info[1];
             let coord_x: Number = info[2];
             let coord_y: Number = info[3];
 
-            var pedestrian: Pedestrian = new Pedestrian(id, name, coord_x, coord_y);
+            inquirer.prompt([
+                { type: "input", name: 'name', message: 'Name? (leave blank to skip)' },
+                { type: "input", name: 'coord_x', message: 'Coordinate X (leave blank to skip)' },
+                { type: "input", name: 'coord_y', message: 'Coordinate Y (leave blank to skip)' }
+            ])
+                .then(async answers => {
+                    name = (answers.name == "") ? name : answers.name;
+                    coord_x = (answers.coord_x == "") ? coord_x : answers.coord_x;
+                    coord_y = (answers.coord_y == "") ? coord_y : answers.coord_y;
 
-            //await EditPedestrian(pedestrian);
-            console.log(pedestrian)
-        })
-        .catch(err => { console.log(err) })
+                    var pedestrian: Pedestrian = new Pedestrian(id, name, coord_x, coord_y);
+                    console.log(pedestrian)
+                    await EditPedestrian(pedestrian);
+                    clear();
+                    console.log(`Edited pedestrian >> ${pedestrian.getName()} [${pedestrian.getCoordX()}/${pedestrian.getCoordY()}] <<`)
+                    MainMenu();
+                })
+                .catch(err => { console.log(err) })
+        }).catch(err => { console.log(err) })
 }
 
 export async function DeletePedestrianView() {
