@@ -7,7 +7,9 @@ export class Pedestrian {
 
     private coord_y: Number;
 
-    constructor(name: String, coord_x: Number, coord_y: Number) {
+
+    constructor(id: Number, name: String, coord_x: Number, coord_y: Number) {
+        this.id = (id != null) ? id : undefined;
         this.coord_x = coord_x;
         this.coord_y = coord_y;
         this.name = name;

@@ -1,5 +1,5 @@
 import { Pedestrian } from '../models/pedestrian';
-import { GetPedestrians, PostPedestrian } from '../service/pedestrian';
+import { GetPedestrians, PostPedestrian, EditPedestrian } from '../service/pedestrian';
 import { CreateTable } from './application';
 import Table from 'cli-table';
 import { MainMenu } from './main_menu';
@@ -7,7 +7,7 @@ import clear from 'clear';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 
-export async function ListPedestrians() {
+export async function ListPedestriansView() {
     var pedestrians: Pedestrian[] = await GetPedestrians();
     var pedRows: any[] = [];
     for (let index = 0; index < pedestrians.length; index++) {
@@ -17,10 +17,10 @@ export async function ListPedestrians() {
     var table: Table = CreateTable(['Name', 'Coordinate X', 'Coordinate Y'], pedRows);
     clear();
     console.log(table.toString());
-    ListPedestriansMenu();
+    ListPedestriansViewMenu();
 }
 
-function ListPedestriansMenu() {
+function ListPedestriansViewMenu() {
     const simulate_pedestrians = chalk.blueBright('Simulate pedestrians');
     const back = chalk.red('Back');
 
@@ -34,11 +34,12 @@ function ListPedestriansMenu() {
             switch (answer.option) {
                 case simulate_pedestrians:
                     console.log('simulating placeholder...')
-                    ListPedestriansMenu();
+                    ListPedestriansViewMenu();
                     break;
                 case back:
                     clear();
                     MainMenu();
+                    break;
                 default:
                     clear();
                     MainMenu();
@@ -48,14 +49,14 @@ function ListPedestriansMenu() {
         .catch(err => { console.log(err) })
 }
 
-export async function AddPedestrian() {
+export async function AddPedestrianView() {
     var pedestrian: Pedestrian;
     inquirer.prompt([
         { type: 'input', name: 'name', message: 'Pedestrian name?' },
     ])
         .then(async answer => {
             let name: string = answer.name;
-            pedestrian = new Pedestrian(name, 0, 0);
+            pedestrian = new Pedestrian(null, name, 0, 0);
             await PostPedestrian(pedestrian);
             clear();
             console.log(chalk.green('Pedestrian created!'));
@@ -65,10 +66,36 @@ export async function AddPedestrian() {
         .catch(err => { console.log(err) })
 }
 
-export async function EditPedestrian() {
+export async function EditPedestrianView() {
+    var pedestrians: Pedestrian[] = await GetPedestrians();
+    var pedestriansList: any[] = [];
+    for (let index = 0; index < pedestrians.length; index++) {
+        const ped: Pedestrian = pedestrians[index];
+        pedestriansList.push(`${ped.getId()}-${ped.getName()}-${ped.getCoordX()}-${ped.getCoordY()}`)
+    }
 
+    inquirer.prompt({
+        type: "list",
+        name: "pedestrian",
+        message: "Which pedestrian?",
+        choices: pedestriansList
+    })
+        .then(async answers => {
+            let info = answers.pedestrian.split('-');
+
+            let id: Number = info[0];
+            let name: String = info[1];
+            let coord_x: Number = info[2];
+            let coord_y: Number = info[3];
+
+            var pedestrian: Pedestrian = new Pedestrian(id, name, coord_x, coord_y);
+
+            //await EditPedestrian(pedestrian);
+            console.log(pedestrian)
+        })
+        .catch(err => { console.log(err) })
 }
 
-export async function DeletePedestrian() {
+export async function DeletePedestrianView() {
 
 }
