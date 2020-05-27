@@ -38,7 +38,7 @@ export async function update(req: Request, res: Response) {
 
         await Vehicle.update(Number(vehicle.getId()), req.body);
 
-        return res.send(vehicle);
+        return res.send(await Vehicle.findOne(req.params.id));
     } catch (error) {
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }

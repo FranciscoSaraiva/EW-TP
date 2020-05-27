@@ -38,7 +38,7 @@ export async function update(req: Request, res: Response) {
 
         await Pedestrian.update(Number(pedestrian.getId()), req.body);
 
-        return res.send(pedestrian);
+        return res.send(await Pedestrian.findOne(req.params.id));
     } catch (error) {
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }

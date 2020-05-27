@@ -23,5 +23,5 @@ app.use(express.json());
 
 app.use('/vehicle', vehicleRoutes);
 
-app.listen(3001);
+app.listen(3002);
 

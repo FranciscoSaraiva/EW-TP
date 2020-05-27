@@ -8,10 +8,10 @@ export class Pedestrian extends BaseEntity {
     @Column({ name: 'name' })
     private name: String;
 
-    @Column({ name: 'coord_x', type: "float", precision: 3, scale: 2 })
+    @Column({ name: 'coord_x', type: "decimal", precision: 10, scale: 6, default: 0 })
     private coord_x: Number;
 
-    @Column({ name: 'coord_y', type: "float", precision: 3, scale: 2 })
+    @Column({ name: 'coord_y', type: "decimal", precision: 10, scale: 6, default: 0 })
     private coord_y: Number;
 
     constructor(name: String, coord_x: Number, coord_y: Number) {
