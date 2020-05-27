@@ -34,7 +34,7 @@ function ListPedestriansViewMenu() {
             switch (answer.option) {
                 case simulate_pedestrians:
                     console.log('simulating placeholder...')
-                    ListPedestriansViewMenu();
+                    SimulatePedestrians();
                     break;
                 case back:
                     clear();
@@ -47,6 +47,10 @@ function ListPedestriansViewMenu() {
             }
         })
         .catch(err => { console.log(err) })
+}
+
+async function SimulatePedestrians() {
+
 }
 
 export async function AddPedestrianView() {
