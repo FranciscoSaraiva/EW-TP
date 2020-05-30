@@ -7,17 +7,29 @@ import clear from 'clear';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 
+const crosswalks = [
+    { name: 'Crosswalk1', coord_x: 41.5608032, coord_y: -8.3936313 },
+    { name: 'Crosswalk2', coord_x: 41.5581083, coord_y: -8.3982033 },
+    { name: 'Crosswalk3', coord_x: 41.5548887, coord_y: -8.4015591 }
+];
+
+
 export async function ListPedestriansView() {
     var pedestrians: Pedestrian[] = await GetPedestrians();
+    var table = PedestriansTable(pedestrians);
+    clear();
+    console.log(table.toString());
+    ListPedestriansViewMenu();
+}
+
+function PedestriansTable(pedestrians: Pedestrian[]): Table {
     var pedRows: any[] = [];
     for (let index = 0; index < pedestrians.length; index++) {
         const ped = pedestrians[index];
         pedRows.push([ped.getName(), ped.getCoordX(), ped.getCoordY()])
     }
     var table: Table = CreateTable(['Name', 'Coordinate X', 'Coordinate Y'], pedRows);
-    clear();
-    console.log(table.toString());
-    ListPedestriansViewMenu();
+    return table;
 }
 
 function ListPedestriansViewMenu() {
@@ -33,7 +45,7 @@ function ListPedestriansViewMenu() {
         .then(answer => {
             switch (answer.option) {
                 case simulate_pedestrians:
-                    console.log('simulating placeholder...')
+                    console.log(chalk.bgGreenBright('simulation starting...'))
                     SimulatePedestrians();
                     break;
                 case back:
@@ -50,8 +62,41 @@ function ListPedestriansViewMenu() {
 }
 
 async function SimulatePedestrians() {
-
+    var pedestrians: Pedestrian[] = await GetPedestrians();
+    setInterval(() => {
+        for (let index = 0; index < pedestrians.length; index++) {
+            var ped: Pedestrian = pedestrians[index];
+            let direction = (Math.floor(Math.random() * (2 - 0))) == 1 ? true : false;
+            let coord = (Math.floor(Math.random() * (2 - 0))) == 1 ? 'X' : 'Y';
+            switch (coord) {
+                case 'X':
+                    simulateXCoord(ped, direction);
+                    break;
+                case 'Y':
+                    simulateYCoord(ped, direction);
+                    break;
+            }
+        }
+        var table = PedestriansTable(pedestrians);
+        clear();
+        console.log(table.toString());
+    }, 3000);
 }
+
+function simulateXCoord(pedestrian: Pedestrian, direction: Boolean) {
+    if (direction)
+        pedestrian.setCoordX(Number(pedestrian.getCoordX()) + 0.0000180); //2 meters
+    else
+        pedestrian.setCoordX(Number(pedestrian.getCoordX()) - 0.0000180); //2 meters
+}
+
+function simulateYCoord(pedestrian: Pedestrian, direction: Boolean) {
+    if (direction)
+        pedestrian.setCoordY(Number(pedestrian.getCoordY()) + 0.0000180); //2 meters
+    else
+        pedestrian.setCoordY(Number(pedestrian.getCoordY()) - 0.0000180); //2 meters
+}
+
 
 export async function AddPedestrianView() {
     var pedestrian: Pedestrian;
