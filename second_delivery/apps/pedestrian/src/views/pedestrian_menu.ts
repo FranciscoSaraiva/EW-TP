@@ -80,21 +80,24 @@ async function SimulatePedestrians() {
         var table = PedestriansTable(pedestrians);
         clear();
         console.log(table.toString());
-    }, 3000);
+    }, 5000);
 }
 
-function simulateXCoord(pedestrian: Pedestrian, direction: Boolean) {
+async function simulateXCoord(pedestrian: Pedestrian, direction: Boolean) {
     if (direction)
         pedestrian.setCoordX(Number(pedestrian.getCoordX()) + 0.0000180); //2 meters
     else
         pedestrian.setCoordX(Number(pedestrian.getCoordX()) - 0.0000180); //2 meters
+
+    await EditPedestrian(pedestrian);
 }
 
-function simulateYCoord(pedestrian: Pedestrian, direction: Boolean) {
+async function simulateYCoord(pedestrian: Pedestrian, direction: Boolean) {
     if (direction)
         pedestrian.setCoordY(Number(pedestrian.getCoordY()) + 0.0000180); //2 meters
     else
         pedestrian.setCoordY(Number(pedestrian.getCoordY()) - 0.0000180); //2 meters
+    await EditPedestrian(pedestrian);
 }
 
 
