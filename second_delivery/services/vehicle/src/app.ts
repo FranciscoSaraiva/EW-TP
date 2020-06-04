@@ -13,7 +13,7 @@ var corsOptions = {
     methods: "*",
 }
 
-console.log('Service Vehicle');
+console.log('Service Vehicle Port: 3001');
 createConnection().then(async (connection) => {
     console.log('Connected ...')
 }).catch(err => { console.log(err) })
@@ -23,5 +23,5 @@ app.use(express.json());
 
 app.use('/vehicle', vehicleRoutes);
 
-app.listen(3002);
+app.listen(3001);
 

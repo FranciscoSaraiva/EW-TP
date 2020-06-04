@@ -12,7 +12,7 @@ var corsOptions = {
     methods: "*",
 }
 
-console.log('Service Crosswalk');
+console.log('Service Crosswalk Port: 3002');
 createConnection().then(async (connection) => {
     console.log('Connected ...')
     setInterval(() => {
