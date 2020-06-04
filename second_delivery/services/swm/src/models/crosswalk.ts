@@ -9,13 +9,15 @@ export class Crosswalk extends BaseEntity {
     @Column({ name: 'address' })
     private address: String;
 
+    // orientado aos pedestres 
+    // 1 verde 0 vermelho para pedestre
     @Column({ name: 'state' })
     private state: String;
 
-    @Column({ name: 'coord_x' })
+    @Column({ name: 'coord_x', type: "decimal", precision: 10, scale: 6, default: 0 })
     private coord_x: Number;
 
-    @Column({ name: 'coord_y' })
+    @Column({ name: 'coord_y', type: "decimal", precision: 10, scale: 6, default: 0 })
     private coord_y: Number;
 
     @OneToMany(type => Record, record => record.getCrosswalk)

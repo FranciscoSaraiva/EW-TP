@@ -4,6 +4,7 @@ import cors from 'cors';
 import { createConnection } from 'typeorm';
 
 import crosswalkRoutes from './routes/crosswalk';
+import { Crosswalk } from './models/crosswalk';
 
 const app = express();
 
@@ -12,12 +13,11 @@ var corsOptions = {
     methods: "*",
 }
 
-console.log('Service Crosswalk');
+console.log('Service Crosswalk Port: 3002');
 createConnection().then(async (connection) => {
+    let crosswalk = new Crosswalk("avenida da liberdade", 0.000000, 0.000000, "verde");
+    await crosswalk.save();
     console.log('Connected ...')
-    setInterval(() => {
-
-    }, 5000);
 });
 
 app.use(cors(corsOptions));

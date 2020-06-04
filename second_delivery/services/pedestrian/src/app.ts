@@ -12,7 +12,7 @@ var corsOptions = {
     methods: "*",
 }
 
-console.log('Service Pedestrian');
+console.log('Service Pedestrian Port 3003');
 createConnection().then((connection) => {
     console.log('Connected ...');
 });
@@ -22,5 +22,5 @@ app.use(express.json());
 
 app.use('/pedestrian', pedestrianRoutes);
 
-app.listen(3001);
+app.listen(3003);
 
