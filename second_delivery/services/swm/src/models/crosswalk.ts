@@ -14,10 +14,10 @@ export class Crosswalk extends BaseEntity {
     @Column({ name: 'state' })
     private state: String;
 
-    @Column({ name: 'coord_x' })
+    @Column({ name: 'coord_x', type: "decimal", precision: 10, scale: 6, default: 0 })
     private coord_x: Number;
 
-    @Column({ name: 'coord_y' })
+    @Column({ name: 'coord_y', type: "decimal", precision: 10, scale: 6, default: 0 })
     private coord_y: Number;
 
     @OneToMany(type => Record, record => record.getCrosswalk)

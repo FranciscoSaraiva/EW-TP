@@ -4,6 +4,7 @@ interface coords {
 }
 
 export function calculate_distance(coordA_x: Number, coordA_y: Number, coordB_x: Number, coordB_y: Number) {
+
     if ((coordA_x == coordB_x) && (coordA_y == coordB_y)) {
         return 0;
     }
@@ -19,7 +20,6 @@ export function calculate_distance(coordA_x: Number, coordA_y: Number, coordB_x:
         dist = Math.acos(dist);
         dist = dist * 180 / Math.PI;
         dist = dist * 60 * 1.1515;
-
-        return dist = dist * 1609.344;
+        return dist * 1609.344;
     }
 }

@@ -29,19 +29,25 @@ export async function show(req: Request, res: Response) {
 
         let contPedestrian = 0;
         pedestrians.forEach(pedestrian => {
-            let distance = calculate_distance(pedestrian.coord_x, pedestrian.corrd_y, crosswalk.coord_x, crosswalk.coord_y);
-            if (distance < 10) {
+            console.log(pedestrian);
+            let distance = calculate_distance(pedestrian.coord_x, pedestrian.coord_y, crosswalk.coord_x, crosswalk.coord_y);
+            console.log(distance);
+            if (distance < 1) {
                 contPedestrian++;
             }
         });
 
         let contVehicle = 0;
-        vehicles.forEach(vehicle => {
-            let distance = calculate_distance(vehicle.coord_x, vehicle.corrd_y, crosswalk.coord_x, crosswalk.coord_y);
-            if (distance < 50) {
-                contVehicle++;
-            }
-        })
+        if (vehicles) {
+            vehicles.forEach(vehicle => {
+                let distance = calculate_distance(vehicle.coord_x, vehicle.corrd_y, crosswalk.coord_x, crosswalk.coord_y);
+                console.log(distance);
+                if (distance < 50) {
+                    contVehicle++;
+                }
+            })
+        }
+
 
         let crosswalk_obj = ChangeCrosswalk(contPedestrian, contVehicle);
 
