@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { Crosswalk } from '../models/crosswalk';
 import { Record } from '../models/record';
-import { getConnectionManager } from 'typeorm';
 
 export async function index(req: Request, res: Response) {
     try {
@@ -37,7 +36,8 @@ export async function create(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
     try {
         let crosswalk: Crosswalk = await Crosswalk.findOne(req.params.id);
-        let record_crosswalk: Record = await Record.findOne({ where: { date: new Date(), crosswalk } });
+
+        let record_crosswalk: Record = await Record.findOne({ where: { date: new Date().toISOString().substr(0, 10), crosswalk } });
 
         if (!record_crosswalk) {
             record_crosswalk = new Record(new Date(), crosswalk);
