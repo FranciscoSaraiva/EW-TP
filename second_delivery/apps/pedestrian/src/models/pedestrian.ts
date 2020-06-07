@@ -1,4 +1,5 @@
 export class Pedestrian {
+
     private id: Number;
 
     private name: String;

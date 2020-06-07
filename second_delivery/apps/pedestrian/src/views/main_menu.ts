@@ -3,45 +3,43 @@ import clear from 'clear';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 //local
-import { ListPedestriansView, AddPedestrianView, EditPedestrianView, DeletePedestrianView } from './pedestrian_menu';
+import { RegisterPedestrianView } from './pedestrian/register';
+import { LoginPedestrianView } from './pedestrian/login';
 
 
 //options
-const list_pedestrians = chalk.yellow('Check pedestrians');
+const simulate_route = chalk.yellow('Simulate Route');
 const add_pedestrian = chalk.blueBright('Add pedestrian');
 const edit_pedestrian = chalk.magenta('Edit pedestrian');
 const delete_pedestrian = chalk.redBright('Delete pedestrian');
+
+//options
+const register = chalk.yellow('Register pedestrian');
+const login = chalk.blueBright('Login pedestrian');
 //---
 const exit = 'Exit';
 
-export function MainMenu(): void {
+export function MainMenuView(): void {
     inquirer.prompt({
         type: "list",
         name: "option",
         message: "Choose an option: ",
-        choices: [list_pedestrians, add_pedestrian, edit_pedestrian, delete_pedestrian, new inquirer.Separator(), exit]
+        choices: [register, login, new inquirer.Separator(), exit]
+    }).then(async answers => {
+        switch (answers.option) {
+            case register:
+                RegisterPedestrianView();
+                break;
+            case login:
+                LoginPedestrianView();
+                break;
+            //-------
+            case exit:
+                process.exit(0);
+            default:
+                clear();
+                MainMenuView();
+                break;
+        }
     })
-        .then(async answers => {
-            switch (answers.option) {
-                case list_pedestrians:
-                    ListPedestriansView();
-                    break;
-                case add_pedestrian:
-                    AddPedestrianView();
-                    break;
-                case edit_pedestrian:
-                    EditPedestrianView();
-                    break;
-                case delete_pedestrian:
-                    DeletePedestrianView();
-                    break;
-                //-------
-                case exit:
-                    process.exit(0);
-                default:
-                    clear();
-                    MainMenu();
-                    break;
-            }
-        })
 }

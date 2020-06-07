@@ -14,7 +14,7 @@ export function Logo(): void {
     console.log(
         boxen(
             chalk.blueBright(
-                figlet.textSync('Pedestrian Sim', { horizontalLayout: 'full' })
+                figlet.textSync('Pedestrian App', { horizontalLayout: 'full' })
             ),
             { padding: 1, borderColor: 'magentaBright', borderStyle: BorderStyle.Double })
     );
