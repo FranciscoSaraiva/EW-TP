@@ -3,6 +3,7 @@ import figlet from 'figlet';
 import chalk from 'chalk';
 import Table from "cli-table";
 import boxen, { BorderStyle } from 'boxen';
+import { Pedestrian } from '../models/pedestrian';
 
 export function MoveScreenUp(): void {
     for (let index = 0; index < 100; index++) {
@@ -28,5 +29,15 @@ export function CreateTable(head: string[], rows: any[]): Table {
         table.push(row);
     });
 
+    return table;
+}
+
+export function PedestriansTable(pedestrians: Pedestrian[]): Table {
+    var pedRows: any[] = [];
+    for (let index = 0; index < pedestrians.length; index++) {
+        const ped = pedestrians[index];
+        pedRows.push([ped.getName(), ped.getCoordX(), ped.getCoordY()])
+    }
+    var table: Table = CreateTable(['Name', 'Coordinate X', 'Coordinate Y'], pedRows);
     return table;
 }
