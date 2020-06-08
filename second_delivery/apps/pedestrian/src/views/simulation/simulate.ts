@@ -55,6 +55,10 @@ async function SimulateRouteInit(pedestrian: Pedestrian, route: Route) {
             clearInterval(interval);
             return;
         }
+
+        //if crosswalk is red
+        //do something
+        //if crosswalk is green
         let coordinate: Coordinate = route.getCoordinates()[counter];
         let coord_x: Number = coordinate.getCoord_x();
         let coord_y: Number = coordinate.getCoord_y();
