@@ -95,7 +95,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
             const crosswalk = crosswalks[i];
             if (isVehicle == "yes") {
                 if (checkDistance(crosswalk, lat, lng, 50)) {
-                    if (crosswalk.getState() == 1) {
+                    if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
                         // está verde para peões
                         status = -1;
                     } else {
@@ -107,7 +107,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                 }
             } else {
                 if (checkDistance(crosswalk, lat, lng, 10)) {
-                    if (crosswalk.getState() == 0) {
+                    if (crosswalk.getState() == 1) {
                         // está vermelho para peões
                         status = -1;
                     } else {

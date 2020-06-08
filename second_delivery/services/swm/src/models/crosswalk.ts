@@ -9,8 +9,8 @@ export class Crosswalk extends BaseEntity {
     @Column({ name: 'address' })
     private address: String;
 
-    // orientado aos pedestres 
-    // 1 verde 0 vermelho para pedestre
+    // orientado aos veiculos 
+    // -1 vermelho 0 amarelo 1 verde para veiculos
     @Column({ name: 'state' })
     private state: Number;
 
