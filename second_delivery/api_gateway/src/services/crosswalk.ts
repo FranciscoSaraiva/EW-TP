@@ -37,3 +37,11 @@ export async function DeleteCrosswalk(id: number): Promise<any> {
     var crosswalk: {} = response.data;
     return crosswalk;
 }
+
+export async function pedestrainCheckCoord() {
+
+}
+
+export async function vehicleCheckCoord() {
+
+}

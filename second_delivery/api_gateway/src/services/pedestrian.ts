@@ -7,6 +7,3 @@ export async function GetPedestrians(): Promise<any> {
     let pedestrains: [] = response.data;
     return pedestrains;
 }
-
-
-

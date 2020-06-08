@@ -14,11 +14,7 @@ export async function index(req: Request, res: Response) {
         return res.status(500).send(error);
     }
 }
-/**
- * 0.000009 -> 1
- * 0.00045 -> 1.609344
- */
-// TO DO FALTA ENVIAR NOTIFICAÇÕES. COMO? NÃO SEI 
+
 export async function show(req: Request, res: Response) {
     try {
         let crosswalk = await crosswalkService.GetCrosswalk(Number(req.params.id));
@@ -115,4 +111,12 @@ export async function remove(req: Request, res: Response) {
     } catch (error) {
         return res.status(500).send(error);
     }
+}
+
+export async function pedestrainCheckCoord() {
+
+}
+
+export async function vehicleCheckCoord() {
+
 }
