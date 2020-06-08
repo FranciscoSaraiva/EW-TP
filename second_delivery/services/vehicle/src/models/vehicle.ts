@@ -15,19 +15,19 @@ export class Vehicle extends BaseEntity {
     @Column({ name: 'license_plate' })
     private license_plate: String;
 
-    @Column({ name: 'coord_x', type: "decimal", precision: 10, scale: 6 })
-    private coord_x: Number;
+    @Column({ name: 'lat', type: "decimal", precision: 10, scale: 6 })
+    private lat: Number;
 
-    @Column({ name: 'coord_y', type: "decimal", precision: 10, scale: 6 })
-    private coord_y: Number;
+    @Column({ name: 'lng', type: "decimal", precision: 10, scale: 6 })
+    private lng: Number;
 
-    constructor(brand: String, model: String, license_plate: String, coord_x: Number, coord_y: Number) {
+    constructor(brand: String, model: String, license_plate: String, lat: Number, lng: Number) {
         super();
         this.brand = brand;
         this.model = model;
         this.license_plate = license_plate;
-        this.coord_x = coord_x;
-        this.coord_y = coord_y;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public getId(): Number {
@@ -62,20 +62,20 @@ export class Vehicle extends BaseEntity {
         this.license_plate = license_plate;
     }
 
-    public getCoordX(): Number {
-        return this.coord_x;
+    public getLat(): Number {
+        return this.lat;
     }
 
-    public setCoordX(coord_x: Number): void {
-        this.coord_x = +(coord_x.toFixed(6));
+    public setLat(lat: Number): void {
+        this.lat = +(lat.toFixed(6));
     }
 
-    public getCoordY(): Number {
-        return this.coord_y;
+    public getLng(): Number {
+        return this.lng;
     }
 
-    public setCoordY(coord_y: Number): void {
-        this.coord_y = +(coord_y.toFixed(6));
+    public setLng(lng: Number): void {
+        this.lng = +(lng.toFixed(6));
     }
 
 }

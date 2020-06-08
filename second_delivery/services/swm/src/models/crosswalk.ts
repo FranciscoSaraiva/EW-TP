@@ -14,20 +14,20 @@ export class Crosswalk extends BaseEntity {
     @Column({ name: 'state' })
     private state: String;
 
-    @Column({ name: 'coord_x', type: "decimal", precision: 10, scale: 6, default: 0 })
-    private coord_x: Number;
+    @Column({ name: 'lat', type: "decimal", precision: 10, scale: 6, default: 0 })
+    private lat: Number;
 
-    @Column({ name: 'coord_y', type: "decimal", precision: 10, scale: 6, default: 0 })
-    private coord_y: Number;
+    @Column({ name: 'lng', type: "decimal", precision: 10, scale: 6, default: 0 })
+    private lng: Number;
 
     @OneToMany(type => Record, record => record.getCrosswalk)
     @JoinColumn()
     private records: Record[];
 
-    constructor(address: String, coord_x: Number, coord_y: Number, state: String) {
+    constructor(address: String, lat: Number, lng: Number, state: String) {
         super();
-        this.coord_x = coord_x;
-        this.coord_y = coord_y;
+        this.lat = lat;
+        this.lng = lng;
         this.address = address;
         this.state = state;
     }
@@ -56,20 +56,20 @@ export class Crosswalk extends BaseEntity {
         this.state = state;
     }
 
-    public getCoordX(): Number {
-        return this.coord_x;
+    public getLat(): Number {
+        return this.lat;
     }
 
-    public setCoordX(coord_x: Number): void {
-        this.coord_x = coord_x;
+    public setLat(lat: Number): void {
+        this.lat = lat;
     }
 
-    public getCoordY(): Number {
-        return this.coord_y;
+    public getLng(): Number {
+        return this.lng;
     }
 
-    public setCoordY(coord_y: Number): void {
-        this.coord_y = coord_y;
+    public setLng(lng: Number): void {
+        this.lng = lng;
     }
 
     public getRegisters(): Record[] {
