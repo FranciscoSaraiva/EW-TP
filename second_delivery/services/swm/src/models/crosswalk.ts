@@ -12,7 +12,7 @@ export class Crosswalk extends BaseEntity {
     // orientado aos pedestres 
     // 1 verde 0 vermelho para pedestre
     @Column({ name: 'state' })
-    private state: String;
+    private state: Number;
 
     @Column({ name: 'lat', type: "decimal", precision: 10, scale: 6, default: 0 })
     private lat: Number;
@@ -24,7 +24,7 @@ export class Crosswalk extends BaseEntity {
     @JoinColumn()
     private records: Record[];
 
-    constructor(address: String, lat: Number, lng: Number, state: String) {
+    constructor(address: String, lat: Number, lng: Number, state: Number) {
         super();
         this.lat = lat;
         this.lng = lng;
@@ -48,11 +48,11 @@ export class Crosswalk extends BaseEntity {
         this.address = address;
     }
 
-    public getState(): String {
+    public getState(): Number {
         return this.state;
     }
 
-    public setState(state: String): void {
+    public setState(state: Number): void {
         this.state = state;
     }
 

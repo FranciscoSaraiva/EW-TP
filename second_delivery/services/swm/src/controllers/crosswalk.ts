@@ -85,31 +85,42 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
         let lng: number = Number(req.query.lng);
         let isVehicle: string = req.query.isVehicle.toString();
 
+        /**
+         * status -> 0 -> Pode continuar a simular
+         * status -> -1 -> Tem de parar de simular
+         */
+        let status: number = 0;
+
         for (let i = 0; i < crosswalks.length; i++) {
             const crosswalk = crosswalks[i];
             if (isVehicle == "yes") {
                 if (checkDistance(crosswalk, lat, lng, 50)) {
-                    // se estiver proximo mas o sinal estiver verde
-                    //deixa continuar a simular
-                    // se estiver proximo mas o sinal estiver vermelho
-                    //não deixa continuar a simular
+                    if (crosswalk.getState() == 1) {
+                        // está verde para peões
+                        status = -1;
+                    } else {
+                        // está vermelho para peões
+                        status = 0;
+                    }
                 } else {
-                    //se estiver longe independente do semaforo
-                    //deixa continuar a simular
+                    status = 0;
                 }
             } else {
                 if (checkDistance(crosswalk, lat, lng, 10)) {
-                    // se estiver proximo mas o sinal estiver verde
-                    //deixa continuar a simular
-                    // se estiver proximo mas o sinal estiver vermelho
-                    //não deixa continuar a simular
+                    if (crosswalk.getState() == 0) {
+                        // está vermelho para peões
+                        status = -1;
+                    } else {
+                        // está verde para os peões
+                        status = 0;
+                    }
                 } else {
-                    //se estiver longe independente do semaforo
-                    //deixa continuar a simular
+                    status = 0;
                 }
             }
-
         }
+
+        return res.send({ status });
 
     } catch (error) {
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
