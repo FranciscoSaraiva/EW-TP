@@ -76,3 +76,67 @@ export async function remove(req: Request, res: Response) {
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
+
+export async function checkProximityToContinueSimulating(req: Request, res: Response) {
+    try {
+        let crosswalks: Crosswalk[] = await Crosswalk.find();
+
+        let lat: number = Number(req.query.lat);
+        let lng: number = Number(req.query.lng);
+        let isVehicle: string = req.query.isVehicle.toString();
+
+        for (let i = 0; i < crosswalks.length; i++) {
+            const crosswalk = crosswalks[i];
+            if (isVehicle == "yes") {
+                if (checkDistance(crosswalk, lat, lng, 50)) {
+                    // se estiver proximo mas o sinal estiver verde
+                    //deixa continuar a simular
+                    // se estiver proximo mas o sinal estiver vermelho
+                    //não deixa continuar a simular
+                } else {
+                    //se estiver longe independente do semaforo
+                    //deixa continuar a simular
+                }
+            } else {
+                if (checkDistance(crosswalk, lat, lng, 10)) {
+                    // se estiver proximo mas o sinal estiver verde
+                    //deixa continuar a simular
+                    // se estiver proximo mas o sinal estiver vermelho
+                    //não deixa continuar a simular
+                } else {
+                    //se estiver longe independente do semaforo
+                    //deixa continuar a simular
+                }
+            }
+
+        }
+
+    } catch (error) {
+        return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
+    }
+}
+
+function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance: number) {
+    if ((crosswalk.getLat() == lat) && (crosswalk.getLng() == lng)) {
+        return true;
+    }
+
+    var radlat1 = Math.PI * Number(crosswalk.getLat()) / 180;
+    var radlat2 = Math.PI * lat / 180;
+    var theta = Number(crosswalk.getLng()) - lng;
+    var radtheta = Math.PI * theta / 180;
+    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+        dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = dist * 180 / Math.PI;
+    dist = dist * 60 * 1.1515;
+    // mile -> meter = 1 609.344
+    dist = dist * 1609.344;
+    if (dist < distance) {
+        return true;
+    }
+    return false;
+
+}
