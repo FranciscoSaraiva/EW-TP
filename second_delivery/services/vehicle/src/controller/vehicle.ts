@@ -23,7 +23,7 @@ export async function show(req: Request, res: Response) {
 
 export async function create(req: Request, res: Response) {
     try {
-        let vehicle: Vehicle = new Vehicle(req.body.brand, req.body.model, req.body.license_plate, req.body.coord_x, req.body.coord_y);
+        let vehicle: Vehicle = new Vehicle(req.body.brand, req.body.model, req.body.license_plate, req.body.lat, req.body.lng);
         await vehicle.save();
 
         return res.send(vehicle);
