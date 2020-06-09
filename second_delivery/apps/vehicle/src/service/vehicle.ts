@@ -1,14 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 import { Vehicle } from '../models/vehicle';
 
-const LOCALHOST = 'http://localhost:3002';
+const LOCALHOST = 'http://localhost:3001';
 
 export async function GetVehicles(): Promise<Vehicle[]> {
     var response: AxiosResponse = await axios.get(LOCALHOST + '/vehicle');
+    
     var vehicles: Vehicle[] = [];
     for (let index = 0; index < response.data.length; index++) {
         const vehicle = response.data[index];
-        vehicles.push(new Vehicle(vehicle.id, vehicle.brand, vehicle.model, vehicle.license_plate, vehicle.coord_x, vehicle.coord_y));
+        vehicles.push(new Vehicle(vehicle.id, vehicle.brand, vehicle.model, vehicle.license_plate, vehicle.lat, vehicle.lng));
     }
     return vehicles;
 }
