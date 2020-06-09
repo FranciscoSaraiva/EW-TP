@@ -3,7 +3,7 @@ import { route1 } from "../../routes/route1";
 import { Coordinate } from "../../models/coordinate";
 import { Route } from "../../models/route";
 import inquirer from "inquirer";
-import { EditVehicle } from "../../service/vehicle";
+import { EditVehicle, CheckCoordinate } from "../../service/vehicle";
 import { clear } from "console";
 import { VehicleDetailsView } from "../vehicle/details";
 import chalk from "chalk";
@@ -63,13 +63,22 @@ async function SimulateRouteInit(vehicle: Vehicle, route: Route) {
         let lat: Number = coordinate.getLat();
         let lng: Number = coordinate.getLng();
 
-        vehicle.setLat(lat);
-        vehicle.setLng(lng);
+        //var veh_edit: Vehicle = await EditVehicle(vehicle);
+        let status = await CheckCoordinate(lat, lng, vehicle.getLicense_plate());
+        if (status == -1) {
+            clear();
+            VehicleDetailsView(vehicle);
+            console.log(chalk.redBright('STOP'));
+        } else if (status == 0) {
+            vehicle.setLat(lat);
+            vehicle.setLng(lng);
+            clear();
+            VehicleDetailsView(vehicle);
+            counter++;
+            console.log(chalk.greenBright('Driving...!'));
+        } else {
+            return;
+        }
 
-        var veh_edit: Vehicle = await EditVehicle(vehicle);
-        clear();
-        counter++;
-        VehicleDetailsView(veh_edit);
-        console.log(chalk.greenBright('Walking...!'));
     }, 2000);
 }

@@ -3,7 +3,7 @@ import { route1 } from "../../routes/route1";
 import { Coordinate } from "../../models/coordinate";
 import { Route } from "../../models/route";
 import inquirer from "inquirer";
-import { EditPedestrian } from "../../service/pedestrian";
+import { EditPedestrian, CheckCoordinate } from "../../service/pedestrian";
 import { clear } from "console";
 import { PedestrianDetailsView } from "../pedestrian/details";
 import chalk from "chalk";
@@ -66,10 +66,22 @@ async function SimulateRouteInit(pedestrian: Pedestrian, route: Route) {
         pedestrian.setLat(lat);
         pedestrian.setLng(lng);
 
-        var ped_edit: Pedestrian = await EditPedestrian(pedestrian);
-        clear();
-        counter++;
-        PedestrianDetailsView(ped_edit);
-        console.log(chalk.greenBright('Walking...!'));
+        //var ped_edit: Pedestrian = await EditPedestrian(pedestrian);
+        var status = await CheckCoordinate(pedestrian.getLat(), pedestrian.getLng(), pedestrian.getName());
+        if (status == -1) {
+            clear();
+            PedestrianDetailsView(pedestrian);
+            console.log(chalk.redBright('STOP'));
+        } else if (status == 0) {
+            pedestrian.setLat(lat);
+            pedestrian.setLng(lng);
+            clear();
+            PedestrianDetailsView(pedestrian);
+            counter++;
+            console.log(chalk.greenBright('Walking...!'));
+        } else {
+            return;
+        }
+
     }, 2000);
 }

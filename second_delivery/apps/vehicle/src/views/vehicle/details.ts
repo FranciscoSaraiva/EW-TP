@@ -3,7 +3,6 @@ import boxen, { BorderStyle } from "boxen";
 import chalk from "chalk";
 
 export function VehicleDetailsView(vehicle: Vehicle) {
-    console.log(vehicle);
     console.log(boxen(
         chalk.blue('ID: ') + vehicle.getId() + '\n' +
         chalk.blue('Brand: ') + vehicle.getBrand() + '\n' +

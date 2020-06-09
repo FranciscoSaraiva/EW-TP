@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
 import axios from 'axios';
 import { calculate_distance } from '../util/util';
 import * as crosswalkService from '../services/crosswalk';
@@ -113,10 +113,20 @@ export async function remove(req: Request, res: Response) {
     }
 }
 
-export async function pedestrainCheckCoord() {
-
+export async function pedestrainCheckCoord(req: Request, res: Response) {
+    try {
+        var response = await crosswalkService.pedestrainCheckCoord(Number(req.query.lat), Number(req.query.lng), req.query.name.toString());
+        return res.status(200).send(response);
+    } catch (error) {
+        return res.status(500).send("Alguma coisa correu mal ...");
+    }
 }
 
-export async function vehicleCheckCoord() {
-
+export async function vehicleCheckCoord(req: Request, res: Response) {
+    try {
+        var response = await crosswalkService.vehicleCheckCoord(Number(req.query.lat), Number(req.query.lng), req.query.license_plate.toString());
+        return res.status(200).send(response);
+    } catch (error) {
+        return res.status(500).send("Alguma coisa correu mal ...");
+    }
 }

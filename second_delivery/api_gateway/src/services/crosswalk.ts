@@ -38,26 +38,15 @@ export async function DeleteCrosswalk(id: number): Promise<any> {
     return crosswalk;
 }
 
-
 /**
  * Status -1 -> para de simular
  * Status 0 -> Continua a simular
  */
 export async function pedestrainCheckCoord(lat: number, lng: number, name: string) {
-    var response: AxiosResponse = await axios.get(`${urlCrosswalk}/check-proximity?lat=${lat}&lng=${lng}&isVehicle=no`);
-    if (response.data.status == 0) {
-        // Pode continuar a simular
-        // Descartar as coordenadas do pedestre
-        return {
-            status: response.data.status
-        }
-    } else if (response.data.status == -1) {
-        // Não pode continuar a simular
-        // Atualizar as coordenadas do Pedestre (como? provavelmente com um identificador unico tipo numero de cidadao que vai ter de vir no pedido)
-        // responder que ele pode andar
-        return {
-            status: response.data.status
-        }
+    var response: AxiosResponse = await axios.get(`${urlCrosswalk}/check-proximity?lat=${lat}&lng=${lng}&name=${name}&isVehicle=no`);
+
+    return {
+        status: response.data.status
     }
 }
 
@@ -66,24 +55,9 @@ export async function pedestrainCheckCoord(lat: number, lng: number, name: strin
  * Status 0 -> Continua a simular
  */
 export async function vehicleCheckCoord(lat: number, lng: number, license_plate: string) {
-    var response: AxiosResponse = await axios.get(`${urlCrosswalk}/check-proximity?lat=${lat}&lng=${lng}&isVehicle=yes`);
+    var response: AxiosResponse = await axios.get(`${urlCrosswalk}/check-proximity?lat=${lat}&lng=${lng}&license_plate=${license_plate}&isVehicle=yes`);
 
     return {
         status: response.data.staus
     }
-
-    /*if (response.data.status == 0) {
-        // Pode continuar a simular
-        // Descartar as coordenadas do veiculo
-        return {
-            status: response.data.status
-        }
-    } else if (response.data.status == -1) {
-        // Não pode continuar a simular
-        // Atualizar as coordenadas do Veiculo (como? provavelmente com um identificador unico tipo matricula que vai ter de vir no pedido)
-        // responder que ele pode andar
-        return {
-            status: response.data.status
-        }
-    }*/
 }
