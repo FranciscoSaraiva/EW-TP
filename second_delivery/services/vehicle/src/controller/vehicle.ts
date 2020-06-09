@@ -48,8 +48,10 @@ export async function create(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
     try {
         let vehicle: Vehicle = await Vehicle.findOne(req.params.id);
-
-        await Vehicle.update(Number(vehicle.getId()), req.body);
+        if (vehicle) {
+            console.log('entrei aqui2 ' + new Date());
+            await Vehicle.update(Number(vehicle.getId()), req.body);
+        }
 
         return res.send(await Vehicle.findOne(req.params.id));
     } catch (error) {
@@ -61,12 +63,14 @@ export async function update(req: Request, res: Response) {
 export async function remove(req: Request, res: Response) {
     try {
         let vehicle: Vehicle = await Vehicle.findOne(req.params.id);
-
-        Vehicle.remove(vehicle);
-
-        return res.send(vehicle);
+        console.log('entrei aqui ' + new Date());
+        if (vehicle) {
+            Vehicle.remove(vehicle);
+        }
+        return res.send(true);
 
     } catch (error) {
+        console.log(error);
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
