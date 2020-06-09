@@ -5,6 +5,7 @@ import { createConnection } from 'typeorm';
 
 import crosswalkRoutes from './routes/crosswalk';
 import { Crosswalk } from './models/crosswalk';
+import axios from 'axios';
 
 const app = express();
 
@@ -45,6 +46,10 @@ setInterval(async () => {
         }
     }
 }, 5000)
+
+axios.get('http://localhost:3001/vehicle').then(res => {
+    console.log(res.data[0]);
+})
 
 app.use(cors(corsOptions));
 app.use(express.json());
