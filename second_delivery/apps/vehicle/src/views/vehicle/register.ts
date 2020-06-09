@@ -19,9 +19,6 @@ export function RegisterVehicleView() {
             let license_plate: string = answer.license_plate;
 
             vehicle = new Vehicle(null, brand, model, license_plate, 0, 0);
-            await PostVehicle(vehicle);
-
-            vehicle = new Vehicle(null, brand, model, license_plate, 0, 0);
             let response_veh: any = await PostVehicle(vehicle);
             vehicle.setId(response_veh.id);
 

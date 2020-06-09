@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-let urlCrosswalk: string = 'http://localhost:3002/crosswalk';
+let urlCrosswalk: string = 'http://localhost:3002';
 
 export async function GetCrosswalks(): Promise<any> {
     var response: AxiosResponse = await axios.get(urlCrosswalk);
@@ -55,9 +55,13 @@ export async function pedestrainCheckCoord(lat: number, lng: number, name: strin
  * Status 0 -> Continua a simular
  */
 export async function vehicleCheckCoord(lat: number, lng: number, license_plate: string) {
-    var response: AxiosResponse = await axios.get(`${urlCrosswalk}/crosswalk/check-proximity?lat=${lat}&lng=${lng}&license_plate=${license_plate}&isVehicle=yes`);
-
-    return {
-        status: response.data.staus
+    try {
+        var response: AxiosResponse = await axios.get(`${urlCrosswalk}/crosswalk/check-proximity?lat=${lat}&lng=${lng}&license_plate=${license_plate}&isVehicle=yes`);
+        return {
+            status: response.data.status
+        }
+    } catch (e) {
+        console.log(e);
     }
+
 }

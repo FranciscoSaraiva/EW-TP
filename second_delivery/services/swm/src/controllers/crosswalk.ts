@@ -84,13 +84,14 @@ export async function remove(req: Request, res: Response) {
 
 export async function checkProximityToContinueSimulating(req: Request, res: Response) {
     try {
+
         let crosswalks: Crosswalk[] = await Crosswalk.find();
 
         let lat: number = Number(req.query.lat);
         let lng: number = Number(req.query.lng);
         let isVehicle: string = req.query.isVehicle.toString();
         let license_plate: string = req.query.license_plate.toString();
-        let name: string = req.query.name.toString();
+        //let name: string = req.query.name.toString();
 
         /**
          * status -> 0 -> Pode continuar a simular
@@ -101,7 +102,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
         let status: number = 0;
         // Está proximo mas não tem de parar de simular
         let carAllowedToContinue: number = 0;
-        console.log(carAllowedToContinue);
+        
         for (let i = 0; i < crosswalks.length; i++) {
             const crosswalk = crosswalks[i];
             if (isVehicle == "yes") {
@@ -110,7 +111,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                 status = await checkForPedestrianState(crosswalk, lat, lng);
             }
         }
-        console.log(carAllowedToContinue);
+        
         if (status == -1 || carAllowedToContinue == 1) {
             /**
              * 1º verificar se já existe o carro com aquela matricula na BD
@@ -130,6 +131,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
         return res.send({ status });
 
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
@@ -174,8 +176,8 @@ async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: numb
         // Se não existir nenhum Record daquele dia
         // Deve criar um record novo para aquela crosswalk
         let record: Record = await Record.findOne({ where: { crosswalk } });
-        record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
-        await record.save();
+        //record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
+        //await record.save();
     } else {
         status = 0;
     }
@@ -204,11 +206,11 @@ async function checkForPedestrianState(crosswalk: Crosswalk, lat: number, lng: n
 
 async function checkVehicleContinue(isVehicle: string, license_plate: string, lat: number, lng: number) {
     if (isVehicle == "yes") {
-        let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license-plate=${license_plate}`);
+        let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license_plate=${license_plate}`);
         if (hasVehicle) {
             await axios.put(`${urlVehicle}/${hasVehicle.data.id}`, { lat, lng });
         } else {
-            await axios.post(`${urlVehicle}`, { license_plate, lat, lng });
+            await axios.post(`${urlVehicle}`, { license_plate, brand: 'honda', model: 'crx', lat, lng });
         }
     } else {
         let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${name}`);

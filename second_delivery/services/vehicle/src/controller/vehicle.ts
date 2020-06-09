@@ -5,7 +5,7 @@ export async function index(req: Request, res: Response) {
     try {
 
         let response: any;
-        if (req.query.name) {
+        if (req.query.license_plate) {
             response = await Vehicle.findOne({
                 where: {
                     license_plate: req.query.license_plate
@@ -18,6 +18,7 @@ export async function index(req: Request, res: Response) {
         return res.send(response);
 
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
@@ -39,6 +40,7 @@ export async function create(req: Request, res: Response) {
 
         return res.send(vehicle);
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
@@ -51,6 +53,7 @@ export async function update(req: Request, res: Response) {
 
         return res.send(await Vehicle.findOne(req.params.id));
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
