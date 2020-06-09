@@ -4,16 +4,15 @@ export class Pedestrian {
 
     private name: String;
 
-    private coord_x: Number;
+    private lat: Number;
 
-    private coord_y: Number;
+    private lng: Number;
 
-
-    constructor(id: Number, name: String, coord_x: Number, coord_y: Number) {
+    constructor(id: Number, name: String, lat: Number, lng: Number) {
         this.id = (id != null) ? id : undefined;
-        this.coord_x = coord_x;
-        this.coord_y = coord_y;
         this.name = name;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public getId(): Number {
@@ -32,20 +31,20 @@ export class Pedestrian {
         this.name = name;
     }
 
-    public getCoordX(): Number {
-        return this.coord_x;
+    public getLat(): Number {
+        return this.lat;
     }
 
-    public setCoordX(coord_x: Number): void {
-        this.coord_x = +(coord_x.toFixed(6));
+    public setLat(lat: Number): void {
+        this.lat = +(lat.toFixed(6));
     }
 
-    public getCoordY(): Number {
-        return this.coord_y;
+    public getLng(): Number {
+        return this.lng;
     }
 
-    public setCoordY(coord_y: Number): void {
-        this.coord_y = +(coord_y.toFixed(6));
+    public setLng(lng: Number): void {
+        this.lng = +(lng.toFixed(6));
     }
 
 }

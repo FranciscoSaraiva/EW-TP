@@ -6,13 +6,6 @@ import inquirer from 'inquirer';
 import { RegisterPedestrianView } from './pedestrian/register';
 import { LoginPedestrianView } from './pedestrian/login';
 
-
-//options
-const simulate_route = chalk.yellow('Simulate Route');
-const add_pedestrian = chalk.blueBright('Add pedestrian');
-const edit_pedestrian = chalk.magenta('Edit pedestrian');
-const delete_pedestrian = chalk.redBright('Delete pedestrian');
-
 //options
 const register = chalk.yellow('Register pedestrian');
 const login = chalk.blueBright('Login pedestrian');

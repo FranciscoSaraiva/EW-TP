@@ -9,7 +9,7 @@ export async function GetPedestrians(): Promise<Pedestrian[]> {
     var pedestrians: Pedestrian[] = [];
     for (let index = 0; index < response.data.length; index++) {
         const pedestrian = response.data[index];
-        pedestrians.push(new Pedestrian(pedestrian.id, pedestrian.name, pedestrian.coord_x, pedestrian.coord_y));
+        pedestrians.push(new Pedestrian(pedestrian.id, pedestrian.name, pedestrian.lat, pedestrian.lng));
     }
     return pedestrians;
 }

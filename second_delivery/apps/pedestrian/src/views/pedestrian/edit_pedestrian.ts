@@ -9,24 +9,24 @@ export async function EditPedestrianView(pedestrian: Pedestrian) {
 
     let id: Number = pedestrian.getId();
     let name: String = pedestrian.getName();
-    let coord_x: Number = pedestrian.getCoordX();
-    let coord_y: Number = pedestrian.getCoordY();
+    let lat: Number = pedestrian.getLat();
+    let lng: Number = pedestrian.getLng();
 
     inquirer.prompt([
         { type: "input", name: 'name', message: 'Name? (leave blank to skip)' },
-        { type: "input", name: 'coord_x', message: 'Coordinate X (leave blank to skip)' },
-        { type: "input", name: 'coord_y', message: 'Coordinate Y (leave blank to skip)' }
+        { type: "input", name: 'lat', message: 'Coordinate X (leave blank to skip)' },
+        { type: "input", name: 'lng', message: 'Coordinate Y (leave blank to skip)' }
     ])
         .then(async answers => {
             name = (answers.name == "") ? name : answers.name;
-            coord_x = (answers.coord_x == "") ? coord_x : answers.coord_x;
-            coord_y = (answers.coord_y == "") ? coord_y : answers.coord_y;
+            lat = (answers.lat == "") ? lat : answers.lat;
+            lng = (answers.lng == "") ? lng : answers.lng;
 
-            var pedestrian: Pedestrian = new Pedestrian(id, name, coord_x, coord_y);
+            var pedestrian: Pedestrian = new Pedestrian(id, name, lat, lng);
             console.log(pedestrian)
             await EditPedestrian(pedestrian);
             clear();
-            console.log(`Edited pedestrian >> ${pedestrian.getName()} [${pedestrian.getCoordX()}/${pedestrian.getCoordY()}] <<`)
+            console.log(`Edited pedestrian >> ${pedestrian.getName()} [${pedestrian.getLat()}/${pedestrian.getLng()}] <<`)
             LoggedMenuView(pedestrian);
         })
         .catch(err => { console.log(err) })

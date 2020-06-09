@@ -1,28 +1,28 @@
 export class Coordinate {
 
-    private coord_x: Number;
+    private lat: Number;
 
-    private coord_y: Number;
+    private lng: Number;
 
-    constructor(coord_x: Number, coord_y: Number) {
-        this.coord_x = coord_x;
-        this.coord_y = coord_y;
+    constructor(lat: Number, lng: Number) {
+        this.lat = lat;
+        this.lng = lng;
     }
 
-    public getCoord_x(): Number {
-        return this.coord_x;
+    public getLat(): Number {
+        return this.lat;
     }
 
-    public getCoord_y(): Number {
-        return this.coord_y;
+    public setLat(lat: Number): void {
+        this.lat = lat;
     }
 
-    public setCoord_x(coord_x: Number): void {
-        this.coord_x = coord_x;
+    public getLng(): Number {
+        return this.lng;
     }
 
-    public setCoord_y(coord_y: Number): void {
-        this.coord_y = coord_y;
+    public setLng(lng: Number): void {
+        this.lng = lng;
     }
 
 }

@@ -36,7 +36,7 @@ export function PedestriansTable(pedestrians: Pedestrian[]): Table {
     var pedRows: any[] = [];
     for (let index = 0; index < pedestrians.length; index++) {
         const ped = pedestrians[index];
-        pedRows.push([ped.getName(), ped.getCoordX(), ped.getCoordY()])
+        pedRows.push([ped.getName(), ped.getLat(), ped.getLng()])
     }
     var table: Table = CreateTable(['Name', 'Coordinate X', 'Coordinate Y'], pedRows);
     return table;

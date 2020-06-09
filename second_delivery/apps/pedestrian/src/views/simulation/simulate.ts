@@ -34,9 +34,9 @@ async function GetRoutes(): Promise<Route[]> {
     var routes: Route[] = [];
     var coordinates: Coordinate[] = [];
     route1.forEach(coord => {
-        let coord_x: Number = Number(coord.split(',')[1]);
-        let coord_y: Number = Number(coord.split(',')[0]);
-        let coordinate: Coordinate = new Coordinate(coord_x, coord_y);
+        let lat: Number = Number(coord.split(',')[1]);
+        let lng: Number = Number(coord.split(',')[0]);
+        let coordinate: Coordinate = new Coordinate(lat, lng);
         coordinates.push(coordinate);
     });
     let route = new Route("Around Uminho Route", coordinates);
@@ -60,11 +60,11 @@ async function SimulateRouteInit(pedestrian: Pedestrian, route: Route) {
         //do something
         //if crosswalk is green
         let coordinate: Coordinate = route.getCoordinates()[counter];
-        let coord_x: Number = coordinate.getCoord_x();
-        let coord_y: Number = coordinate.getCoord_y();
+        let lat: Number = coordinate.getLat();
+        let lng: Number = coordinate.getLng();
 
-        pedestrian.setCoordX(coord_x);
-        pedestrian.setCoordY(coord_y);
+        pedestrian.setLat(lat);
+        pedestrian.setLng(lng);
 
         var ped_edit: Pedestrian = await EditPedestrian(pedestrian);
         clear();
