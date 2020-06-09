@@ -73,7 +73,3 @@ async function SimulateRouteInit(pedestrian: Pedestrian, route: Route) {
         console.log(chalk.greenBright('Walking...!'));
     }, 2000);
 }
-
-function SimulateRoute(pedestrian: Pedestrian, route: Route) {
-
-}
