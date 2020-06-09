@@ -3,9 +3,20 @@ import { Vehicle } from '../models/vehicle';
 
 export async function index(req: Request, res: Response) {
     try {
-        let vehicles: Vehicle[] = await Vehicle.find();
 
-        return res.send(vehicles);
+        let response: any;
+        if (req.query.name) {
+            response = await Vehicle.findOne({
+                where: {
+                    license_plate: req.query.license_plate
+                }
+            })
+        } else {
+            response = await Vehicle.find();
+        }
+
+        return res.send(response);
+
     } catch (error) {
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
