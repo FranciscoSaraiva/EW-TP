@@ -99,21 +99,29 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                         // está verde para peões
                         status = -1;
                     } else {
-                        // está vermelho para peões
+                        // está verde para carros
                         status = 0;
                     }
+                    // To Do Alterar isto
+                    // Se não existir nenhum Record daquele dia
+                    // Deve criar um record novo para aquela crosswalk
+                    let record: Record = await Record.findOne({ where: { crosswalk } });
+                    record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
+                    await record.save();
                 } else {
                     status = 0;
                 }
             } else {
                 if (checkDistance(crosswalk, lat, lng, 10)) {
-                    if (crosswalk.getState() == 1) {
-                        // está vermelho para peões
-                        status = -1;
-                    } else {
-                        // está verde para os peões
-                        status = 0;
-                    }
+                    // To Do Alterar isto
+                    // Se não existir nenhum Record daquele dia
+                    // Deve criar um record novo para aquela crosswalk
+                    let record: Record = await Record.findOne({ where: { crosswalk } });
+                    record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
+                    await record.save();
+                    crosswalk.setState(-1);
+                    await crosswalk.save();
+                    status = 0;
                 } else {
                     status = 0;
                 }
