@@ -3,10 +3,22 @@ import { Pedestrian } from '../models/pedestrian';
 
 export async function index(req: Request, res: Response) {
     try {
-        let pedestrians: Pedestrian[] = await Pedestrian.find();
 
-        return res.send(pedestrians);
+        let response: any;
+        if (req.query.name) {
+            response = await Pedestrian.findOne({
+                where: {
+                    name: req.query.name
+                }
+            })
+        } else {
+            response = await Pedestrian.find();
+        }
+
+        return res.send(response);
+
     } catch (error) {
+        console.log(error);
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
