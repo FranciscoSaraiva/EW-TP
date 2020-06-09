@@ -16,7 +16,7 @@ var corsOptions = {
 console.log('Service Crosswalk Port: 3002');
 createConnection().then(async (connection) => {
     console.log('Connected ...')
-    let crosswalk = new Crosswalk("avenida da liberdade", 0.000000, 0.000000, 1);
+    let crosswalk = new Crosswalk("avenida da liberdade", 41.55965, -8.40044, 1);
     await crosswalk.save();
 });
 

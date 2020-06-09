@@ -4,8 +4,8 @@ import { Request, Response } from 'express';
 import { Crosswalk } from '../models/crosswalk';
 import { Record } from '../models/record';
 
-const urlPedestrian = 'http://localhost:3003/';
-const urlVehicle = 'http://localhost:3001/';
+const urlPedestrian = 'http://localhost:3003/pedestrian';
+const urlVehicle = 'http://localhost:3001/vehicle';
 
 export async function index(req: Request, res: Response) {
     try {
@@ -101,85 +101,30 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
         let status: number = 0;
         // Está proximo mas não tem de parar de simular
         let carAllowedToContinue: number = 0;
-
+        console.log(carAllowedToContinue);
         for (let i = 0; i < crosswalks.length; i++) {
             const crosswalk = crosswalks[i];
             if (isVehicle == "yes") {
-                if (checkDistance(crosswalk, lat, lng, 50)) {
-                    if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
-                        // está verde para peões
-                        status = -1;
-                    } else {
-                        // está verde para carros
-                        status = 0;
-                        carAllowedToContinue = 1;
-                    }
-                    // To Do Alterar isto
-                    // Se não existir nenhum Record daquele dia
-                    // Deve criar um record novo para aquela crosswalk
-                    let record: Record = await Record.findOne({ where: { crosswalk } });
-                    record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
-                    await record.save();
-                } else {
-                    status = 0;
-                }
+                status = await checkForVehicleState(crosswalk, lat, lng, carAllowedToContinue);
             } else {
-                if (checkDistance(crosswalk, lat, lng, 10)) {
-                    // To Do Alterar isto
-                    // Se não existir nenhum Record daquele dia
-                    // Deve criar um record novo para aquela crosswalk
-                    let record: Record = await Record.findOne({ where: { crosswalk } });
-
-                    record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
-                    await record.save();
-                    crosswalk.setState(-1);
-
-                    await crosswalk.save();
-                    status = 0;
-                } else {
-                    status = 0;
-                }
+                status = await checkForPedestrianState(crosswalk, lat, lng);
             }
         }
-
+        console.log(carAllowedToContinue);
         if (status == -1 || carAllowedToContinue == 1) {
             /**
              * 1º verificar se já existe o carro com aquela matricula na BD
              * 1ºa) Se existir apenas se altera as coordenadas
              * 2º Se não existir vamos colocar o veiculo na BD naquela posição
              */
-            if (isVehicle == "yes") {
-                let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license-plate=${license_plate}`);
-                if (hasVehicle) {
-                    await axios.put(`${urlVehicle}/${hasVehicle.data.id}`, { lat, lng });
-                } else {
-                    await axios.post(`${urlVehicle}`, { license_plate, lat, lng });
-                }
-            } else {
-                let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${name}`);
-                if (hasPedestrian) {
-                    await axios.put(`${urlPedestrian}/${hasPedestrian.data.id}`, { lat, lng });
-                } else {
-                    await axios.post(`${urlPedestrian}`, { name, lat, lng });
-                }
-            }
+            await checkVehicleContinue(isVehicle, license_plate, lat, lng);
         } else {
             /**
              * Verificar se o carro ou o pedestre já existe na BD
              * Se existir remover 
              * Se não descarta e continua  
              */
-            if (isVehicle == "yes") {
-                let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license_plate=${license_plate}`);
-                if (hasVehicle) {
-                    await axios.delete(`${urlVehicle}/${hasVehicle.data.id}`)
-                }
-            } else {
-                let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${name}`);
-                if (hasPedestrian) {
-                    await axios.delete(`${urlPedestrian}/${hasPedestrian.data.id}`);
-                }
-            }
+            await checkDatabaseForDelete(isVehicle, license_plate);
         }
 
         return res.send({ status });
@@ -212,4 +157,79 @@ function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance:
     }
     return false;
 
+}
+
+async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: number, carAllowedToContinue: number): Promise<number> {
+    let status: number;
+    if (checkDistance(crosswalk, lat, lng, 50)) {
+        if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
+            // está verde para peões
+            status = -1;
+        } else {
+            // está verde para carros
+            status = 0;
+            carAllowedToContinue = 1;
+        }
+        // To Do Alterar isto
+        // Se não existir nenhum Record daquele dia
+        // Deve criar um record novo para aquela crosswalk
+        let record: Record = await Record.findOne({ where: { crosswalk } });
+        record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
+        await record.save();
+    } else {
+        status = 0;
+    }
+    return status;
+}
+
+async function checkForPedestrianState(crosswalk: Crosswalk, lat: number, lng: number): Promise<number> {
+    var status = 0;
+    if (checkDistance(crosswalk, lat, lng, 10)) {
+        // To Do Alterar isto
+        // Se não existir nenhum Record daquele dia
+        // Deve criar um record novo para aquela crosswalk
+        let record: Record = await Record.findOne({ where: { crosswalk } });
+
+        record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
+        await record.save();
+        crosswalk.setState(-1);
+
+        await crosswalk.save();
+        status = 0;
+    } else {
+        status = 0;
+    }
+    return status;
+}
+
+async function checkVehicleContinue(isVehicle: string, license_plate: string, lat: number, lng: number) {
+    if (isVehicle == "yes") {
+        let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license-plate=${license_plate}`);
+        if (hasVehicle) {
+            await axios.put(`${urlVehicle}/${hasVehicle.data.id}`, { lat, lng });
+        } else {
+            await axios.post(`${urlVehicle}`, { license_plate, lat, lng });
+        }
+    } else {
+        let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${name}`);
+        if (hasPedestrian) {
+            await axios.put(`${urlPedestrian}/${hasPedestrian.data.id}`, { lat, lng });
+        } else {
+            await axios.post(`${urlPedestrian}`, { name, lat, lng });
+        }
+    }
+}
+
+async function checkDatabaseForDelete(isVehicle: string, license_plate: string) {
+    if (isVehicle == "yes") {
+        let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license_plate=${license_plate}`);
+        if (hasVehicle) {
+            await axios.delete(`${urlVehicle}/${hasVehicle.data.id}`)
+        }
+    } else {
+        let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${name}`);
+        if (hasPedestrian) {
+            await axios.delete(`${urlPedestrian}/${hasPedestrian.data.id}`);
+        }
+    }
 }
