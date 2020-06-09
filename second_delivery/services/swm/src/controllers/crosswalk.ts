@@ -1,6 +1,11 @@
+import axios, { AxiosResponse } from 'axios';
+
 import { Request, Response } from 'express';
 import { Crosswalk } from '../models/crosswalk';
 import { Record } from '../models/record';
+
+const urlPedestrian = 'http://localhost:3003/';
+const urlVehicle = 'http://localhost:3001/';
 
 export async function index(req: Request, res: Response) {
     try {
@@ -84,12 +89,18 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
         let lat: number = Number(req.query.lat);
         let lng: number = Number(req.query.lng);
         let isVehicle: string = req.query.isVehicle.toString();
+        let license_plate: string = req.query.license_plate.toString();
+        let name: string = req.query.name.toString();
 
         /**
          * status -> 0 -> Pode continuar a simular
          * status -> -1 -> Tem de parar de simular
          */
+
+        // TO DO (COMO ESTÁ SÓ VAI FUNCIONAR PARA UMA CROSSWALK)
         let status: number = 0;
+        // Está proximo mas não tem de parar de simular
+        let carAllowedToContinue: number = 0;
 
         for (let i = 0; i < crosswalks.length; i++) {
             const crosswalk = crosswalks[i];
@@ -101,6 +112,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                     } else {
                         // está verde para carros
                         status = 0;
+                        carAllowedToContinue = 1;
                     }
                     // To Do Alterar isto
                     // Se não existir nenhum Record daquele dia
@@ -117,13 +129,55 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                     // Se não existir nenhum Record daquele dia
                     // Deve criar um record novo para aquela crosswalk
                     let record: Record = await Record.findOne({ where: { crosswalk } });
+
                     record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
                     await record.save();
                     crosswalk.setState(-1);
+
                     await crosswalk.save();
                     status = 0;
                 } else {
                     status = 0;
+                }
+            }
+        }
+
+        if (status == -1 || carAllowedToContinue == 1) {
+            /**
+             * 1º verificar se já existe o carro com aquela matricula na BD
+             * 1ºa) Se existir apenas se altera as coordenadas
+             * 2º Se não existir vamos colocar o veiculo na BD naquela posição
+             */
+            if (isVehicle == "yes") {
+                let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license-plate=${license_plate}`);
+                if (hasVehicle) {
+                    await axios.put(`${urlVehicle}/${hasVehicle.data.id}`, { lat, lng });
+                } else {
+                    await axios.post(`${urlVehicle}`, { license_plate, lat, lng });
+                }
+            } else {
+                let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${name}`);
+                if (hasPedestrian) {
+                    await axios.put(`${urlPedestrian}/${hasPedestrian.data.id}`, { lat, lng });
+                } else {
+                    await axios.post(`${urlPedestrian}`, { name, lat, lng });
+                }
+            }
+        } else {
+            /**
+             * Verificar se o carro ou o pedestre já existe na BD
+             * Se existir remover 
+             * Se não descarta e continua  
+             */
+            if (isVehicle == "yes") {
+                let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license_plate=${license_plate}`);
+                if (hasVehicle) {
+                    await axios.delete(`${urlVehicle}/${hasVehicle.data.id}`)
+                }
+            } else {
+                let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${name}`);
+                if (hasPedestrian) {
+                    await axios.delete(`${urlPedestrian}/${hasPedestrian.data.id}`);
                 }
             }
         }

@@ -67,7 +67,12 @@ export async function pedestrainCheckCoord(lat: number, lng: number, name: strin
  */
 export async function vehicleCheckCoord(lat: number, lng: number, license_plate: string) {
     var response: AxiosResponse = await axios.get(`${urlCrosswalk}/check-proximity?lat=${lat}&lng=${lng}&isVehicle=yes`);
-    if (response.data.status == 0) {
+
+    return {
+        status: response.data.staus
+    }
+
+    /*if (response.data.status == 0) {
         // Pode continuar a simular
         // Descartar as coordenadas do veiculo
         return {
@@ -80,5 +85,5 @@ export async function vehicleCheckCoord(lat: number, lng: number, license_plate:
         return {
             status: response.data.status
         }
-    }
+    }*/
 }

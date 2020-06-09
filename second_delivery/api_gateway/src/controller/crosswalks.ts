@@ -23,7 +23,7 @@ export async function show(req: Request, res: Response) {
 
         let vehicles = await vehicleService.GetVehicles();
 
-        let contPedestrian = 0;
+        /*let contPedestrian = 0;
         pedestrians.forEach(pedestrian => {
             let distance = calculate_distance(pedestrian.coord_x, pedestrian.coord_y, crosswalk.coord_x, crosswalk.coord_y);
             if (distance < 1) {
@@ -43,7 +43,7 @@ export async function show(req: Request, res: Response) {
 
         let crosswalk_obj = ChangeCrosswalk(contPedestrian, contVehicle);
 
-        crosswalk = await crosswalkService.EditCrosswalk(Number(req.params.id), crosswalk_obj);
+        crosswalk = await crosswalkService.EditCrosswalk(Number(req.params.id), crosswalk_obj);*/
 
         return res.status(200).send(crosswalk);
 
