@@ -1,7 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import * as material from '@material-ui/core';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import './App.css';
 import L from 'leaflet';
@@ -9,7 +8,8 @@ import car from './assets/car.png';
 import red from './assets/red.png';
 import green from './assets/green.png';
 import yellow from './assets/yellow.png';
-import person from './assets/person.png'
+import person from './assets/person.png';
+import { Modal, ModalBody } from 'reactstrap'
 
 let urlCrosswalk = 'http://localhost:3333/crosswalks/'
 
@@ -17,19 +17,21 @@ class App extends Component {
     state = {
         crosswalks: [],
         idCrosswalk: -1,
-        crosswalk: []
+        crosswalk: {},
+        modal: false
     }
 
     componentDidMount() {
-        axios.get('https://jsonplaceholder.typicode.com/posts/1/comments').then((res) => {
-            this.state.crosswalks = res.data;
+        axios.get(urlCrosswalk).then((res) => {
             this.setState({
                 crosswalks: res.data
             })
+        }).catch(e => {
+            console.log(e)
         });
 
-        this.state.crosswalks = setInterval(() => {
-            axios.get('https://jsonplaceholder.typicode.com/posts/1/comments').then((res) => {
+        setInterval(() => {
+            axios.get(urlCrosswalk).then((res) => {
                 this.setState({
                     crosswalks: res.data
                 })
@@ -37,12 +39,14 @@ class App extends Component {
         }, 60000);
     }
 
+
     changeIdCrosswlak = (id) => {
         this.setState({
             idCrosswalk: id
         })
         setInterval(() => {
-            axios.get('https://jsonplaceholder.typicode.com/posts?userId=1').then(res => {
+            axios.get(`${urlCrosswalk}${this.state.idCrosswalk}`).then(res => {
+                console.log(res.data);
                 this.setState({
                     crosswalk: res.data
                 })
@@ -74,49 +78,142 @@ class App extends Component {
         iconSize: [80, 80], // size of the icon
     });
 
-    //classes = useStyles2();
+    getCrosswalkState = (state) => {
+        if (state === -1) {
+            return "Vermelho"
+        }
+        if (state === 0) {
+            return "Amarelo"
+        }
+        if (state === 1) {
+            return "Verde"
+        }
+    }
 
+    getCrosswalkIcon = (state) => {
+        if (state === -1) {
+            return this.redIcon
+        }
+        if (state === 0) {
+            return this.yellowIcon
+        }
+        if (state === 1) {
+            return this.greenIcon
+        }
+    }
 
     render() {
-        console.log(this.state.crosswalk);
-        let map = <p>Por favor selecione uma crosswalk</p>
-        let pedestrains;
+        let map;
+        let pedestrians;
         let vehicles;
-        let traffic_light;
 
-        if (this.state.crosswalk.length > 0) {
+        if (this.state.crosswalk.crosswalk) {
             // fazer o código para meter dentro dos markers os pedestres veiculos e a crosswalk
+            if (this.state.crosswalk.res_pedestrians) {
+                pedestrians = this.state.crosswalk.res_pedestrians.map((pedestrian) => {
+                    return (
+                        <Marker key={pedestrian.id} position={[pedestrian.lat, pedestrian.lng]} icon={this.personIcon}>
+                            <Popup>
+                                <span>
+                                    <p>Nome: {pedestrian.name} </p>
+                                    <p>Lat: {pedestrian.lat}</p>
+                                    <p>Lng: {pedestrian.lng}</p>
+                                </span>
+                            </Popup>
+                        </Marker>
+                    );
+                })
+            }
+
+            if (this.state.crosswalk.res_vehicles) {
+                vehicles = this.state.crosswalk.res_vehicles.map((vehicle) => {
+                    return <Marker key={vehicle.id} position={[vehicle.lat, vehicle.lng]} icon={this.carIcon}>
+                        <Popup>
+                            <span>
+                                Nome: {vehicle.name}
+                                Lat: {vehicle.lat}
+                                Lng: {vehicle.lng}
+                            </span>
+                        </Popup>
+                    </Marker>
+                })
+            }
+
+            map = (
+                <Map center={[this.state.crosswalk.crosswalk.lat, this.state.crosswalk.crosswalk.lng]} zoom={20} style={{ width: "100%" }}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    />
+                    <Marker position={[this.state.crosswalk.crosswalk.lat, this.state.crosswalk.crosswalk.lng]} icon={this.getCrosswalkIcon(this.state.crosswalk.crosswalk.state)}>
+                        <Popup>
+                            <span>
+                                Rua: {this.state.crosswalk.crosswalk.address}
+                                Lat: {this.state.crosswalk.crosswalk.lat}
+                                Lng: {this.state.crosswalk.crosswalk.lng}
+                            </span>
+                        </Popup>
+                    </Marker>
+                    {pedestrians}
+                    {vehicles}
+                </Map>
+            );
+
         }
 
-        if (this.state.idCrosswalk !== -1) {
-            map = <Map center={[45.4, -75.7]} zoom={13}>
-                <TileLayer
-                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                />
-                <Marker position={[45.4, -75.7]} icon={this.personIcon}>
-                    <Popup>
-                        <span>
-                            A pretty CSS3 popup. <br /> Easily customizable.
-						</span>
-                    </Popup>
-                </Marker>
-            </Map>
-        }
-
-        let table = <p>Ainda sem dados ...</p>
+        let table = <material.TableRow>
+            <material.TableCell>
+                A carregar dados ...
+            </material.TableCell>
+            <material.TableCell>
+                A carregar dados ...
+            </material.TableCell>
+            <material.TableCell>
+                A carregar dados ...
+            </material.TableCell>
+            <material.TableCell>
+                A carregar dados ...
+            </material.TableCell>
+            <material.TableCell>
+                A carregar dados ...
+            </material.TableCell>
+            <material.TableCell>
+                A carregar dados ...
+            </material.TableCell>
+            <material.TableCell>
+                A carregar dados ...
+            </material.TableCell>
+        </material.TableRow>
+        let status = <p>Sem status</p>
 
         if (this.state.crosswalks.length > 0) {
             table = this.state.crosswalks.map((crosswalk) => (
-                <material.TableRow key={crosswalk.id} onClick={() => this.changeIdCrosswlak(crosswalk.id)}>
+                <material.TableRow key={crosswalk.id} onClick={() => {
+                    this.changeIdCrosswlak(crosswalk.id)
+                    this.setState({
+                        modal: !this.state.modal
+                    })
+                }}>
                     <material.TableCell component='th' scope='row'>
-                        {crosswalk.userId}
+                        {crosswalk.id}
                     </material.TableCell>
-                    <material.TableCell style={{ width: 160 }} align='right'>
-                        {crosswalk.email}
+                    <material.TableCell align='right'>
+                        {crosswalk.address}
                     </material.TableCell>
-                    <material.TableCell style={{ width: 160 }} align='right'>
-                        {crosswalk.name}
+                    <material.TableCell align='right'>
+                        {crosswalk.lat}
+                    </material.TableCell>
+                    <material.TableCell align='right'>
+                        {crosswalk.lng}
+                    </material.TableCell>
+                    <material.TableCell align='right'>
+                        {this.getCrosswalkState(crosswalk.state)}
+                    </material.TableCell>
+                    <material.TableCell align='right'>
+                        0
+                    </material.TableCell>
+                    <material.TableCell align='right'>
+                        0
                     </material.TableCell>
                 </material.TableRow>
             ))
@@ -134,6 +231,7 @@ class App extends Component {
                                 <material.TableCell align='right'>Rua</material.TableCell>
                                 <material.TableCell align='right'>Latitude</material.TableCell>
                                 <material.TableCell align='right'>Longitude</material.TableCell>
+                                <material.TableCell align='right'>Semáforo</material.TableCell>
                                 <material.TableCell align='right'>Total de Pedestres/dia</material.TableCell>
                                 <material.TableCell align='right'>Total de Veículos/dia</material.TableCell>
                             </material.TableRow>
@@ -144,9 +242,13 @@ class App extends Component {
                     </material.Table>
                 </material.TableContainer>
 
-                {map}
+                <Modal size="lg" isOpen={this.state.modal} toggle={() => { this.setState({ modal: !this.state.modal }) }} style={{ width: "100vh" }}>
+                    <ModalBody>
+                        {map}
+                    </ModalBody>
+                </Modal>
 
-            </div>
+            </div >
         );
     }
 }

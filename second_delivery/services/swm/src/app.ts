@@ -47,10 +47,6 @@ setInterval(async () => {
     }
 }, 5000)
 
-axios.get('http://localhost:3001/vehicle').then(res => {
-    console.log(res.data[0]);
-})
-
 app.use(cors(corsOptions));
 app.use(express.json());
 

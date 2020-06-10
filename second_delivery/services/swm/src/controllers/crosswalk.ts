@@ -13,46 +13,48 @@ export async function index(req: Request, res: Response) {
 
         return res.send(crosswalks);
     } catch (error) {
+        console.log(error);
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
 
 export async function show(req: Request, res: Response) {
     try {
-        let crosswalk: Crosswalk = await Crosswalk.findOne(req.params.id);
+        let crosswalk: Crosswalk = await Crosswalk.findOne({ where: { id: req.params.id } });
 
         let pedestrians: AxiosResponse = await axios.get(`${urlPedestrian}/`)
         let vehicles: AxiosResponse = await axios.get(`${urlVehicle}/`);
 
-        let res_pedestrains = [];
-        let res_vehicles = [];
+        let res_pedestrians = pedestrians.data;
+        let res_vehicles = vehicles.data;
 
-        if (pedestrians.data >= 0) {
+        /*if (pedestrians.data >= 0) {
             for (let i = 0; i < pedestrians.data.length; i++) {
                 const pedestrian = pedestrians.data[i];
                 if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 10)) {
                     res_pedestrains.push(pedestrian);
                 }
             }
-        }
+        }*/
 
-        if (vehicles.data >= 0) {
+        /*if (vehicles.data >= 0) {
             for (let i = 0; i < vehicles.data.length; i++) {
                 const vehicle = vehicles.data[i];
-                if (checkDistance(crosswalk, vehicle.lat, vehicle.lng, 10)) {
+                if (checkDistance(crosswalk, vehicle.lat, vehicle.lng, 50)) {
                     res_vehicles.push(vehicle);
                 }
             }
-        }
+        }*/
 
         let response = {
             crosswalk,
-            res_pedestrains,
+            res_pedestrians,
             res_vehicles
         }
 
         return res.send(response);
     } catch (error) {
+        console.log(error);
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
     }
 }
@@ -121,6 +123,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
             } else {
                 status = await checkForPedestrianState(crosswalk, lat, lng);
             }
+
         }
 
         if (status == -1 || carAllowedToContinue == 1) {

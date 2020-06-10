@@ -3,13 +3,18 @@ import axios, { AxiosResponse } from 'axios';
 let urlCrosswalk: string = 'http://localhost:3002';
 
 export async function GetCrosswalks(): Promise<any> {
-    var response: AxiosResponse = await axios.get(urlCrosswalk);
-    var crosswalks: [] = response.data;
-    return crosswalks;
+    try {
+        var response: AxiosResponse = await axios.get(`${urlCrosswalk}/crosswalk`);
+        var crosswalks: [] = response.data;
+        return crosswalks;
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
 export async function GetCrosswalk(id: number): Promise<any> {
-    var response: AxiosResponse = await axios.get(`${urlCrosswalk}/${id}`);
+    var response: AxiosResponse = await axios.get(`${urlCrosswalk}/crosswalk/${id}`);
     var crosswalk: {} = response.data;
     return crosswalk;
 }
