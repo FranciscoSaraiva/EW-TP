@@ -112,21 +112,21 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
          */
 
         // TO DO (COMO ESTÁ SÓ VAI FUNCIONAR PARA UMA CROSSWALK)
-        let status: number = 0;
+        let status: number[] = [];
         // Está proximo mas não tem de parar de simular
         let carAllowedToContinue: number = 0;
 
         for (let i = 0; i < crosswalks.length; i++) {
             const crosswalk = crosswalks[i];
             if (isVehicle == "yes") {
-                status = await checkForVehicleState(crosswalk, lat, lng, carAllowedToContinue);
+                status.push(await checkForVehicleState(crosswalk, lat, lng, carAllowedToContinue));
             } else {
-                status = await checkForPedestrianState(crosswalk, lat, lng);
+                status.push(await checkForPedestrianState(crosswalk, lat, lng));
             }
 
         }
 
-        if (status == -1 || carAllowedToContinue == 1) {
+        if (status.filter(status => { return status == -1 }).length > 0 || carAllowedToContinue == 1) {
             /**
              * 1º verificar se já existe o carro com aquela matricula na BD
              * 1ºa) Se existir apenas se altera as coordenadas
@@ -142,7 +142,9 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
             await checkDatabaseForDelete(isVehicle, license_plate);
         }
 
-        return res.send({ status });
+        return res.send({
+            "status": (status.filter(status => { return status == -1 }).length > 0) ? -1 : 0
+        });
 
     } catch (error) {
         console.log(error)
