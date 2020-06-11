@@ -38,7 +38,7 @@ export async function DeletePedestrian(id: Number): Promise<Pedestrian> {
 }
 
 export async function CheckCoordinate(lat: Number, lng: Number, name: String): Promise<any> {
-    var response: AxiosResponse = await axios.get(`${urlGateway}/crosswalks/pedestrain-check-coord?lat=${lat}&lng=${lng}&name=${name}`);
+    var response: AxiosResponse = await axios.get(`${urlGateway}/crosswalks/pedestrian-check-coord?lat=${lat}&lng=${lng}&name=${name}`);
 
     return response.data.status;
 }

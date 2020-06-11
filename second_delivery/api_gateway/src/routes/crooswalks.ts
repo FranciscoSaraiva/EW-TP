@@ -4,7 +4,7 @@ import * as crosswalks from '../controller/crosswalks';
 const routes = Router();
 
 routes.get('/', crosswalks.index);
-routes.get('/pedestrain-check-coord', crosswalks.pedestrainCheckCoord);
+routes.get('/pedestrian-check-coord', crosswalks.pedestrianCheckCoord);
 routes.get('/vehicle-check-coord', crosswalks.vehicleCheckCoord);
 routes.get('/:id', crosswalks.show);
 

@@ -113,9 +113,9 @@ export async function remove(req: Request, res: Response) {
     }
 }
 
-export async function pedestrainCheckCoord(req: Request, res: Response) {
+export async function pedestrianCheckCoord(req: Request, res: Response) {
     try {
-        var response = await crosswalkService.pedestrainCheckCoord(Number(req.query.lat), Number(req.query.lng), req.query.name.toString());
+        var response = await crosswalkService.pedestrianCheckCoord(Number(req.query.lat), Number(req.query.lng), req.query.name.toString());
         return res.status(200).send(response);
     } catch (error) {
         return res.status(500).send("Alguma coisa correu mal ...");

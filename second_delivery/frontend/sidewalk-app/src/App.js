@@ -59,23 +59,23 @@ class App extends Component {
 
     carIcon = L.icon({
         iconUrl: car,
-        iconSize: [80, 80], // size of the icon
+        iconSize: [50, 50], // size of the icon
     });
     yellowIcon = L.icon({
         iconUrl: yellow,
-        iconSize: [80, 80], // size of the icon
+        iconSize: [50, 50], // size of the icon
     });
     redIcon = L.icon({
         iconUrl: red,
-        iconSize: [80, 80], // size of the icon
+        iconSize: [50, 50], // size of the icon
     });
     greenIcon = L.icon({
         iconUrl: green,
-        iconSize: [80, 80], // size of the icon
+        iconSize: [50, 50], // size of the icon
     });
     personIcon = L.icon({
         iconUrl: person,
-        iconSize: [80, 80], // size of the icon
+        iconSize: [50, 50], // size of the icon
     });
 
     getCrosswalkState = (state) => {
@@ -130,9 +130,9 @@ class App extends Component {
                     return <Marker key={vehicle.id} position={[vehicle.lat, vehicle.lng]} icon={this.carIcon}>
                         <Popup>
                             <span>
-                                Nome: {vehicle.name}
-                                Lat: {vehicle.lat}
-                                Lng: {vehicle.lng}
+                                <p>Matrícula: {vehicle.license_plate}</p>
+                                <p>Lat: {vehicle.lat}</p>
+                                <p>Lng: {vehicle.lng}</p>
                             </span>
                         </Popup>
                     </Marker>
@@ -148,9 +148,9 @@ class App extends Component {
                     <Marker position={[this.state.crosswalk.crosswalk.lat, this.state.crosswalk.crosswalk.lng]} icon={this.getCrosswalkIcon(this.state.crosswalk.crosswalk.state)}>
                         <Popup>
                             <span>
-                                Rua: {this.state.crosswalk.crosswalk.address}
-                                Lat: {this.state.crosswalk.crosswalk.lat}
-                                Lng: {this.state.crosswalk.crosswalk.lng}
+                                <p>Rua: {this.state.crosswalk.crosswalk.address}</p>
+                                <p>Lat: {this.state.crosswalk.crosswalk.lat}</p>
+                                <p>Lng: {this.state.crosswalk.crosswalk.lng}</p>
                             </span>
                         </Popup>
                     </Marker>

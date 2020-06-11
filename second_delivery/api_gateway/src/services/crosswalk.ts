@@ -47,7 +47,7 @@ export async function DeleteCrosswalk(id: number): Promise<any> {
  * Status -1 -> para de simular
  * Status 0 -> Continua a simular
  */
-export async function pedestrainCheckCoord(lat: number, lng: number, name: string) {
+export async function pedestrianCheckCoord(lat: number, lng: number, name: string) {
     var response: AxiosResponse = await axios.get(`${urlCrosswalk}/crosswalk/check-proximity?lat=${lat}&lng=${lng}&name=${name}&isVehicle=no`);
 
     return {
