@@ -82,7 +82,6 @@ async function SimulateRouteInit(vehicle: Vehicle, route: Route) {
             clear();
             VehicleDetailsView(vehicle);
             console.log(chalk.redBright('STOP'));
-            console.log(data)
             if (data.pedestrianInRange)
                 console.log(chalk.red('THERE ARE PEDESTRIANS IN RANGE \n (!!) SLOW DOWN (!!)'))
         } else if (data.status == 0) {
@@ -92,7 +91,6 @@ async function SimulateRouteInit(vehicle: Vehicle, route: Route) {
             VehicleDetailsView(vehicle);
             counter++;
             console.log(chalk.greenBright('Driving...!'));
-            console.log(data)
             if (data.pedestrianInRange)
                 console.log(chalk.red('THERE ARE PEDESTRIANS IN RANGE \n (!!) SLOW DOWN (!!)'))
         } else {

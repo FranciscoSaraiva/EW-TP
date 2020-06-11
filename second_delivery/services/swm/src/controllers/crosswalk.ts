@@ -95,17 +95,15 @@ export async function remove(req: Request, res: Response) {
     }
 }
 
-async function checkPedestriansInRange(crosswalk: Crosswalk): Promise<boolean> {
+async function checkPedestriansInRange(lat: number, lng: number): Promise<boolean> {
     let inRange: boolean = false;
-
     let pedestrians: AxiosResponse = await axios.get(`${urlPedestrian}/`)
-
-    if (pedestrians.data >= 0) {
+    if (pedestrians.data.length > 0) {
         for (let i = 0; i < pedestrians.data.length; i++) {
-            const pedestrian = pedestrians.data[i];
-            if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 20)) { //100 metros de distância alerta
+            var pedestrian = pedestrians.data[i];
+            var crosswalk = new Crosswalk("template", lat, lng, 0);
+            if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 100)) { //100 metros de distância alerta
                 inRange = true;
-                console.log('Tá aqui um filha da puta')
                 break;
             }
         }
@@ -138,14 +136,14 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                 let vehicleState: object = await checkForVehicleState(crosswalk, lat, lng);
                 status.push(vehicleState['status']);
                 carAllowedToContinue.push(vehicleState['carAllowedToContinue']);
-                pedestrianInRange = await checkPedestriansInRange(crosswalk);
-                console.log(pedestrianInRange)
             } else {
                 let pedestrianState: object = await checkForPedestrianState(crosswalk, lat, lng);
                 status.push(pedestrianState['status']);
                 //pedestrianInRange = pedestrianState['pedestrianInRange'];
             }
-
+        }
+        if (isVehicle == "yes") {
+            pedestrianInRange = await checkPedestriansInRange(lat, lng);
         }
 
         switch (isVehicle) {
@@ -220,7 +218,6 @@ function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance:
         return true;
     }
     return false;
-
 }
 
 async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: number): Promise<object> {
