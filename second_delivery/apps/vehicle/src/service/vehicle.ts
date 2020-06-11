@@ -36,5 +36,5 @@ export async function DeleteVehicle(id: Number): Promise<Vehicle> {
 export async function CheckCoordinate(lat: Number, lng: Number, license_plate: String): Promise<any> {
     var response: AxiosResponse = await axios.get(`${urlGateway}/crosswalks/vehicle-check-coord?lat=${lat}&lng=${lng}&license_plate=${license_plate}`);
     console.log(response.data);
-    return response.data.status;
+    return response.data;
 }

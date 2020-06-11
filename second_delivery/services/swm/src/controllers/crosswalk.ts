@@ -28,23 +28,23 @@ export async function show(req: Request, res: Response) {
         let res_pedestrians = pedestrians.data;
         let res_vehicles = vehicles.data;
 
-        /*if (pedestrians.data >= 0) {
+        if (pedestrians.data >= 0) {
             for (let i = 0; i < pedestrians.data.length; i++) {
                 const pedestrian = pedestrians.data[i];
-                if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 10)) {
+                if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 1000)) {
                     res_pedestrians.push(pedestrian);
                 }
             }
-        }*/
+        }
 
-        /*if (vehicles.data >= 0) {
+        if (vehicles.data >= 0) {
             for (let i = 0; i < vehicles.data.length; i++) {
                 const vehicle = vehicles.data[i];
-                if (checkDistance(crosswalk, vehicle.lat, vehicle.lng, 50)) {
+                if (checkDistance(crosswalk, vehicle.lat, vehicle.lng, 1000)) {
                     res_vehicles.push(vehicle);
                 }
             }
-        }*/
+        }
 
         let response = {
             crosswalk,
@@ -95,6 +95,23 @@ export async function remove(req: Request, res: Response) {
     }
 }
 
+async function checkPedestriansInRange(crosswalk: Crosswalk): Promise<boolean> {
+    let inRange: boolean = false;
+
+    let pedestrians: AxiosResponse = await axios.get(`${urlPedestrian}/`)
+    let res_pedestrians = pedestrians.data;
+
+    if (pedestrians.data >= 0) {
+        for (let i = 0; i < pedestrians.data.length; i++) {
+            const pedestrian = pedestrians.data[i];
+            if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 100)) { //100 metros de distância alerta
+                inRange = true;
+                break;
+            }
+        }
+    }
+    return inRange;
+}
 export async function checkProximityToContinueSimulating(req: Request, res: Response) {
     try {
 
@@ -122,6 +139,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                 let vehicleState: object = await checkForVehicleState(crosswalk, lat, lng);
                 status.push(vehicleState['status']);
                 carAllowedToContinue = vehicleState['carAllowedToContinue'];
+                pedestrianInRange = await checkPedestriansInRange(crosswalk);
             } else {
                 let pedestrianState: object = await checkForPedestrianState(crosswalk, lat, lng);
                 status.push(pedestrianState['status']);
@@ -142,7 +160,6 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                      * 2º Se não existir vamos colocar o veiculo na BD naquela posição
                      */
                     await checkSimulatorContinue(isVehicle, req.query.license_plate.toString(), lat, lng);
-
                 } else {
                     /**
                      * Verificar se o carro ou o pedestre já existe na BD
@@ -174,7 +191,8 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
         }
 
         return res.send({
-            "status": (status.filter(status => { return status == -1 }).length > 0) ? -1 : 0
+            "status": (status.filter(status => { return status == -1 }).length > 0) ? -1 : 0,
+            "pedestrianInRange": pedestrianInRange
         });
 
     } catch (error) {
@@ -212,7 +230,7 @@ function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance:
 async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: number): Promise<object> {
     let status: number;
     let carAllowedToContinue: boolean = false;
-    if (checkDistance(crosswalk, lat, lng, 1000)) {
+    if (checkDistance(crosswalk, lat, lng, 50)) {
         if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
             // está verde para peões
             status = -1;
@@ -224,9 +242,13 @@ async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: numb
         // To Do Alterar isto
         // Se não existir nenhum Record daquele dia
         // Deve criar um record novo para aquela crosswalk
-        //let record: Record = await Record.findOne({ where: { crosswalk } });
-        //record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
-        //await record.save();
+        let record: Record = await Record.findOne({ where: { crosswalk } });
+        if (record) {
+            record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
+        }
+        else
+            record = new Record(new Date(), crosswalk);
+        await record.save();
     } else {
         status = 0;
     }
@@ -236,15 +258,19 @@ async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: numb
 async function checkForPedestrianState(crosswalk: Crosswalk, lat: number, lng: number): Promise<object> {
     var status = 0;
     var pedestrianInRange = false;
-    if (checkDistance(crosswalk, lat, lng, 1000)) {
+    if (checkDistance(crosswalk, lat, lng, 20)) {
         // To Do Alterar isto
         // Se não existir nenhum Record daquele dia
         // Deve criar um record novo para aquela crosswalk
-        //let record: Record = await Record.findOne({ where: { crosswalk } });
-        //record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
-        //await record.save();
-        crosswalk.setState(-1);
+        let record: Record = await Record.findOne({ where: { crosswalk } });
+        if (record) {
+            record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
+        }
+        else
+            record = new Record(new Date(), crosswalk);
+        await record.save();
 
+        crosswalk.setState(-1);
         await crosswalk.save();
         status = 0;
         pedestrianInRange = true;

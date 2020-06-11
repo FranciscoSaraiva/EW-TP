@@ -64,18 +64,22 @@ async function SimulateRouteInit(vehicle: Vehicle, route: Route) {
         let lng: Number = coordinate.getLng();
 
         //var veh_edit: Vehicle = await EditVehicle(vehicle);
-        let status = await CheckCoordinate(lat, lng, vehicle.getLicense_plate());
-        if (status == -1) {
+        let data = await CheckCoordinate(lat, lng, vehicle.getLicense_plate());
+        if (data.status == -1) {
             clear();
             VehicleDetailsView(vehicle);
             console.log(chalk.redBright('STOP'));
-        } else if (status == 0) {
+            if (data.pedestrianInRange)
+                console.log(chalk.red('THERE ARE PEDESTRIANS IN RANGE \n (!!) SLOW DOWN (!!)'))
+        } else if (data.status == 0) {
             vehicle.setLat(lat);
             vehicle.setLng(lng);
             clear();
             VehicleDetailsView(vehicle);
             counter++;
             console.log(chalk.greenBright('Driving...!'));
+            if (data.pedestrianInRange)
+                console.log(chalk.red('THERE ARE PEDESTRIANS IN RANGE \n (!!) SLOW DOWN (!!)'))
         } else {
             return;
         }

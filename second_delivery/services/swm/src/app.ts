@@ -44,7 +44,7 @@ createConnection().then(async (connection) => {
                 await crosswalk.save()
             }
         }
-    }, 5000)
+    }, 10000)
 });
 
 
