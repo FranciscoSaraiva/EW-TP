@@ -9,22 +9,28 @@ import red from './assets/red.png';
 import green from './assets/green.png';
 import yellow from './assets/yellow.png';
 import person from './assets/person.png';
-import { Modal, ModalBody } from 'reactstrap'
+import { Modal, ModalBody, Form, Input, Alert } from 'reactstrap'
 
 let urlCrosswalk = 'http://localhost:3333/crosswalks/'
 
 class App extends Component {
     state = {
         crosswalks: [],
+        pedestrians: [],
+        vehicles: [],
         idCrosswalk: -1,
         crosswalk: {},
-        modal: false
+        modal: false,
+        lat: "",
+        lng: "",
+        address: ""
     }
 
     componentDidMount() {
         axios.get(urlCrosswalk).then((res) => {
+            console.log(res.data)
             this.setState({
-                crosswalks: res.data
+                crosswalks: res.data.crosswalks
             })
         }).catch(e => {
             console.log(e)
@@ -33,12 +39,11 @@ class App extends Component {
         setInterval(() => {
             axios.get(urlCrosswalk).then((res) => {
                 this.setState({
-                    crosswalks: res.data
+                    crosswalks: res.data.crosswalks
                 })
             });
         }, 60000);
     }
-
 
     changeIdCrosswlak = (id) => {
         this.setState({
@@ -56,6 +61,16 @@ class App extends Component {
         }, 5000)
     }
 
+    handleSubmit = (event) => {
+        event.preventDefault();
+        //enviar o pedido post para a api gateway
+        axios.post(`${urlCrosswalk}`, {
+            address: this.state.address,
+            lat: this.state.lat,
+            lng: this.state.lng
+        }).then(res => console.log(res))
+            .catch(error => console.log(error));
+    }
 
     carIcon = L.icon({
         iconUrl: car,
@@ -103,9 +118,15 @@ class App extends Component {
     }
 
     render() {
+
         let map;
         let pedestrians;
         let vehicles;
+
+        let globalMap;
+        let globalCrosswalks;
+        let globalPedestrians;
+        let globalVehicles;
 
         if (this.state.crosswalk.crosswalk) {
             // fazer o código para meter dentro dos markers os pedestres veiculos e a crosswalk
@@ -158,7 +179,6 @@ class App extends Component {
                     {vehicles}
                 </Map>
             );
-
         }
 
         let table = <material.TableRow>
@@ -184,7 +204,6 @@ class App extends Component {
                 A carregar dados ...
             </material.TableCell>
         </material.TableRow>
-        let status = <p>Sem status</p>
 
         if (this.state.crosswalks.length > 0) {
             table = this.state.crosswalks.map((crosswalk) => (
@@ -217,11 +236,93 @@ class App extends Component {
                     </material.TableCell>
                 </material.TableRow>
             ))
+            globalCrosswalks = this.state.crosswalks.map((crosswalk) => {
+                return (
+                    <Marker key={crosswalk.id} position={[crosswalk.lat, crosswalk.lng]} icon={this.getCrosswalkIcon(crosswalk.state)}>
+                        <Popup>
+                            <span>
+                                <p>Rua: {crosswalk.address}</p>
+                                <p>Lat: {crosswalk.lat}</p>
+                                <p>Lng: {crosswalk.lng}</p>
+                            </span>
+                        </Popup>
+                    </Marker>
+                )
+            })
+
+            if (this.state.pedestrians.length > 0) {
+                globalPedestrians = this.state.pedestrians.map((pedestrian) => {
+                    return (
+                        <Marker key={pedestrian.id} position={[pedestrian.lat, pedestrian.lng]} icon={this.personIcon}>
+                            <Popup>
+                                <span>
+                                    <p>Nome: {pedestrian.name} </p>
+                                    <p>Lat: {pedestrian.lat}</p>
+                                    <p>Lng: {pedestrian.lng}</p>
+                                </span>
+                            </Popup>
+                        </Marker>
+                    );
+                })
+            }
+
+            if (this.state.vehicles.length > 0) {
+                globalVehicles = this.state.vehicles.map((vehicle) => {
+                    return (
+                        <Marker key={vehicle.id} position={[vehicle.lat, vehicle.lng]} icon={this.carIcon}>
+                            <Popup>
+                                <span>
+                                    <p>Matrícula: {vehicle.license_plate}</p>
+                                    <p>Lat: {vehicle.lat}</p>
+                                    <p>Lng: {vehicle.lng}</p>
+                                </span>
+                            </Popup>
+                        </Marker>
+                    );
+                })
+            }
+
+            globalMap = <Map center={[41.560661, -8.397521]} zoom={20} style={{ width: "100%" }}>
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                />
+                {globalCrosswalks}
+                {globalPedestrians}
+                {globalVehicles}
+            </Map>
         }
         return (
             <div className='App'>
                 <div className='jumbotron'>
                     <h1 className='display-4'>Crosswalks</h1>
+                </div>
+                <Alert color="primary" style={{ margin: "16px" }}>
+                    Registar uma nova Passadeira
+                </Alert>
+                <div className='d-flex justify-content-center'>
+
+                    <Form onSubmit={this.handleSubmit}>
+                        <Input
+                            type="text"
+                            value={this.state.address}
+                            onChange={(e) => this.setState({ address: e.target.value })}
+                            placeholder="Morada" />
+                        <Input
+                            type="text"
+                            value={this.state.lat}
+                            onChange={(e) => this.setState({ lat: e.target.value })}
+                            placeholder="Latitude" />
+                        <Input
+                            type="text"
+                            value={this.state.lng}
+                            onChange={(e) => this.setState({ lng: e.target.value })}
+                            placeholder="Longitude" />
+                        <Input
+                            type="submit"
+                            value='Submit'
+                            style={{ margin: '24px 0px' }} />
+                    </Form>
                 </div>
                 <material.TableContainer component={material.Paper}>
                     <material.Table aria-label='custom pagination table'>
@@ -241,7 +342,10 @@ class App extends Component {
                         </material.TableBody>
                     </material.Table>
                 </material.TableContainer>
-
+                <Alert color="primary" style={{ margin: "16px" }}>
+                    Mapa Geral das Crosswalks
+                </Alert>
+                {globalMap}
                 <Modal size="lg" isOpen={this.state.modal} toggle={() => { this.setState({ modal: !this.state.modal }) }} style={{ width: "100vh" }}>
                     <ModalBody>
                         {map}
