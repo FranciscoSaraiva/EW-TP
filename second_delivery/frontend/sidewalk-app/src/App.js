@@ -40,6 +40,7 @@ class App extends Component {
 
         setInterval(() => {
             axios.get(urlCrosswalk).then((res) => {
+                console.log(res.data)
                 this.setState({
                     crosswalks: res.data.crosswalks,
                     pedestrians: res.data.pedestrians,
