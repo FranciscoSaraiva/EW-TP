@@ -103,7 +103,7 @@ async function checkPedestriansInRange(crosswalk: Crosswalk): Promise<boolean> {
     if (pedestrians.data >= 0) {
         for (let i = 0; i < pedestrians.data.length; i++) {
             const pedestrian = pedestrians.data[i];
-            if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 1000)) { //100 metros de distância alerta
+            if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 20)) { //100 metros de distância alerta
                 inRange = true;
                 console.log('Tá aqui um filha da puta')
                 break;
@@ -127,8 +127,6 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
          * status -> 0 -> Pode continuar a simular
          * status -> -1 -> Tem de parar de simular
          */
-
-        // TO DO (COMO ESTÁ SÓ VAI FUNCIONAR PARA UMA CROSSWALK)
         let status: number[] = [];
         // Está proximo mas não tem de parar de simular
         let carAllowedToContinue: boolean[] = [];
@@ -228,7 +226,7 @@ function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance:
 async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: number): Promise<object> {
     let status: number;
     let carAllowedToContinue: boolean = false;
-    if (checkDistance(crosswalk, lat, lng, 100)) {
+    if (checkDistance(crosswalk, lat, lng, 200)) {
         if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
             // está verde para peões
             status = -1;
