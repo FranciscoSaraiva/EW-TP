@@ -1,4 +1,4 @@
-export const route1 = [
+export const route_uminho_clock = [
     "-8.40035,41.55944",
     "-8.40037,41.55949",
     "-8.40044,41.55965",

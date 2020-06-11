@@ -49,7 +49,6 @@ export async function update(req: Request, res: Response) {
     try {
         let vehicle: Vehicle = await Vehicle.findOne(req.params.id);
         if (vehicle) {
-            console.log('entrei aqui2 ' + new Date());
             await Vehicle.update(Number(vehicle.getId()), req.body);
         }
 
@@ -63,7 +62,6 @@ export async function update(req: Request, res: Response) {
 export async function remove(req: Request, res: Response) {
     try {
         let vehicle: Vehicle = await Vehicle.findOne(req.params.id);
-        console.log('entrei aqui ' + new Date());
         if (vehicle) {
             Vehicle.remove(vehicle);
         }

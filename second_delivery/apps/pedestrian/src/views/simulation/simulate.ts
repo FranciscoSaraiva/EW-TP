@@ -1,5 +1,4 @@
 import { Pedestrian } from "../../models/pedestrian";
-import { route1 } from "../../routes/route1";
 import { Coordinate } from "../../models/coordinate";
 import { Route } from "../../models/route";
 import inquirer from "inquirer";
@@ -8,6 +7,8 @@ import { clear } from "console";
 import { PedestrianDetailsView } from "../pedestrian/details";
 import chalk from "chalk";
 import { LoggedMenuView } from "../pedestrian/pedestrian_menu";
+import { route_uminho_clock } from "../../routes/route_uminho_clock";
+import { route_uminho_counterclock } from "../../routes/route_uminho_counterclock";
 
 export async function SimulateView(pedestrian: Pedestrian) {
     let routes: Route[] = await GetRoutes();
@@ -32,15 +33,27 @@ export async function SimulateView(pedestrian: Pedestrian) {
 
 async function GetRoutes(): Promise<Route[]> {
     var routes: Route[] = [];
-    var coordinates: Coordinate[] = [];
-    route1.forEach(coord => {
+
+    var coordinates_clock: Coordinate[] = [];
+    route_uminho_clock.forEach(coord => {
         let lat: Number = Number(coord.split(',')[1]);
         let lng: Number = Number(coord.split(',')[0]);
         let coordinate: Coordinate = new Coordinate(lat, lng);
-        coordinates.push(coordinate);
+        coordinates_clock.push(coordinate);
     });
-    let route = new Route("Around Uminho Route", coordinates);
-    routes.push(route);
+    let routeUminhoClock = new Route("Around Uminho Route Clockwise", coordinates_clock);
+    routes.push(routeUminhoClock);
+
+    var coordinates_counter: Coordinate[] = [];
+    route_uminho_counterclock.forEach(coord => {
+        let lat: Number = Number(coord.split(',')[1]);
+        let lng: Number = Number(coord.split(',')[0]);
+        let coordinate: Coordinate = new Coordinate(lat, lng);
+        coordinates_counter.push(coordinate);
+    });
+    let routeUminhoCounterClock = new Route("Around Uminho Route Counter Clock", coordinates_counter);
+    routes.push(routeUminhoCounterClock);
+
     return routes;
 }
 
@@ -66,7 +79,6 @@ async function SimulateRouteInit(pedestrian: Pedestrian, route: Route) {
         pedestrian.setLat(lat);
         pedestrian.setLng(lng);
 
-        //var ped_edit: Pedestrian = await EditPedestrian(pedestrian);
         var status = await CheckCoordinate(pedestrian.getLat(), pedestrian.getLng(), pedestrian.getName());
         if (status == -1) {
             clear();

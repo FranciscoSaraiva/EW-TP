@@ -99,13 +99,13 @@ async function checkPedestriansInRange(crosswalk: Crosswalk): Promise<boolean> {
     let inRange: boolean = false;
 
     let pedestrians: AxiosResponse = await axios.get(`${urlPedestrian}/`)
-    let res_pedestrians = pedestrians.data;
 
     if (pedestrians.data >= 0) {
         for (let i = 0; i < pedestrians.data.length; i++) {
             const pedestrian = pedestrians.data[i];
-            if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 100)) { //100 metros de distância alerta
+            if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 1000)) { //100 metros de distância alerta
                 inRange = true;
+                console.log('Tá aqui um filha da puta')
                 break;
             }
         }
@@ -140,6 +140,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                 status.push(vehicleState['status']);
                 carAllowedToContinue = vehicleState['carAllowedToContinue'];
                 pedestrianInRange = await checkPedestriansInRange(crosswalk);
+                console.log(pedestrianInRange)
             } else {
                 let pedestrianState: object = await checkForPedestrianState(crosswalk, lat, lng);
                 status.push(pedestrianState['status']);
@@ -147,9 +148,6 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
             }
 
         }
-
-        console.log(status);
-        console.log(carAllowedToContinue)
 
         switch (isVehicle) {
             case "yes":
@@ -166,8 +164,8 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                      * Se existir remover 
                      * Se não descarta e continua  
                      */
-                    await checkDatabaseForDelete(isVehicle, req.query.license_plate.toString());
-                    console.log('entrei no delete carro')
+                    await checkDatabaseForEdit(isVehicle, req.query.license_plate.toString());
+                    console.log('entrei no edit carro')
                 }
                 break;
             case "no":
@@ -184,8 +182,8 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
                      * Se existir remover 
                      * Se não descarta e continua  
                      */
-                    await checkDatabaseForDelete(isVehicle, req.query.name.toString());
-                    console.log('entrei no delete pedestre')
+                    await checkDatabaseForEdit(isVehicle, req.query.name.toString());
+                    console.log('entrei no edit pedestre')
                 }
                 break;
         }
@@ -219,7 +217,6 @@ function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance:
     dist = dist * 60 * 1.1515;
     // mile -> meter = 1 609.344
     dist = dist * 1609.344;
-    console.log(dist);
     if (dist < distance) {
         return true;
     }
@@ -230,7 +227,7 @@ function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance:
 async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: number): Promise<object> {
     let status: number;
     let carAllowedToContinue: boolean = false;
-    if (checkDistance(crosswalk, lat, lng, 50)) {
+    if (checkDistance(crosswalk, lat, lng, 100)) {
         if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
             // está verde para peões
             status = -1;
@@ -258,7 +255,7 @@ async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: numb
 async function checkForPedestrianState(crosswalk: Crosswalk, lat: number, lng: number): Promise<object> {
     var status = 0;
     var pedestrianInRange = false;
-    if (checkDistance(crosswalk, lat, lng, 20)) {
+    if (checkDistance(crosswalk, lat, lng, 100)) {
         // To Do Alterar isto
         // Se não existir nenhum Record daquele dia
         // Deve criar um record novo para aquela crosswalk
@@ -302,17 +299,17 @@ async function checkSimulatorContinue(isVehicle: string, identifier: string, lat
     }
 }
 
-async function checkDatabaseForDelete(isVehicle: string, identifier: string) {
+async function checkDatabaseForEdit(isVehicle: string, identifier: string) {
     try {
         if (isVehicle == "yes") {
             let hasVehicle: AxiosResponse = await axios.get(`${urlVehicle}?license_plate=${identifier}`);
             if (hasVehicle.data.id >= 0) {
-                await axios.delete(`${urlVehicle}/${hasVehicle.data.id}`)
+                await axios.put(`${urlVehicle}/${hasVehicle.data.id}`, { lat: 0, lng: 0 })
             }
         } else {
             let hasPedestrian: AxiosResponse = await axios.get(`${urlPedestrian}?name=${identifier}`);
             if (hasPedestrian.data.id >= 0) {
-                await axios.delete(`${urlPedestrian}/${hasPedestrian.data.id}`);
+                await axios.put(`${urlPedestrian}/${hasPedestrian.data.id}`, { lat: 0, lng: 0 });
             }
         }
     } catch (error) {

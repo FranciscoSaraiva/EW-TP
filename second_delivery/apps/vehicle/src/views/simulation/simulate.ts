@@ -1,5 +1,5 @@
 import { Vehicle } from "../../models/vehicle";
-import { route1 } from "../../routes/route1";
+import { route_uminho_clock } from "../../routes/route_uminho_clock";
 import { Coordinate } from "../../models/coordinate";
 import { Route } from "../../models/route";
 import inquirer from "inquirer";
@@ -8,6 +8,7 @@ import { clear } from "console";
 import { VehicleDetailsView } from "../vehicle/details";
 import chalk from "chalk";
 import { LoggedMenuView } from "../vehicle/vehicle_menu";
+import { route_uminho_counterclock } from "../../routes/route_uminho_counterclock";
 
 export async function SimulateView(vehicle: Vehicle) {
     let routes: Route[] = await GetRoutes();
@@ -32,15 +33,27 @@ export async function SimulateView(vehicle: Vehicle) {
 
 async function GetRoutes(): Promise<Route[]> {
     var routes: Route[] = [];
-    var coordinates: Coordinate[] = [];
-    route1.forEach(coord => {
+
+    var coordinates_clock: Coordinate[] = [];
+    route_uminho_clock.forEach(coord => {
         let lat: Number = Number(coord.split(',')[1]);
         let lng: Number = Number(coord.split(',')[0]);
         let coordinate: Coordinate = new Coordinate(lat, lng);
-        coordinates.push(coordinate);
+        coordinates_clock.push(coordinate);
     });
-    let route = new Route("Around Uminho Route Counter Clockwise", coordinates);
-    routes.push(route);
+    let routeUminhoClock = new Route("Around Uminho Route Clockwise", coordinates_clock);
+    routes.push(routeUminhoClock);
+
+    var coordinates_counter: Coordinate[] = [];
+    route_uminho_counterclock.forEach(coord => {
+        let lat: Number = Number(coord.split(',')[1]);
+        let lng: Number = Number(coord.split(',')[0]);
+        let coordinate: Coordinate = new Coordinate(lat, lng);
+        coordinates_counter.push(coordinate);
+    });
+    let routeUminhoCounterClock = new Route("Around Uminho Route Counter Clock", coordinates_counter);
+    routes.push(routeUminhoCounterClock);
+
     return routes;
 }
 
@@ -69,6 +82,7 @@ async function SimulateRouteInit(vehicle: Vehicle, route: Route) {
             clear();
             VehicleDetailsView(vehicle);
             console.log(chalk.redBright('STOP'));
+            console.log(data)
             if (data.pedestrianInRange)
                 console.log(chalk.red('THERE ARE PEDESTRIANS IN RANGE \n (!!) SLOW DOWN (!!)'))
         } else if (data.status == 0) {
@@ -78,6 +92,7 @@ async function SimulateRouteInit(vehicle: Vehicle, route: Route) {
             VehicleDetailsView(vehicle);
             counter++;
             console.log(chalk.greenBright('Driving...!'));
+            console.log(data)
             if (data.pedestrianInRange)
                 console.log(chalk.red('THERE ARE PEDESTRIANS IN RANGE \n (!!) SLOW DOWN (!!)'))
         } else {

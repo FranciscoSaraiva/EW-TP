@@ -63,7 +63,8 @@ export async function vehicleCheckCoord(lat: number, lng: number, license_plate:
     try {
         var response: AxiosResponse = await axios.get(`${urlCrosswalk}/crosswalk/check-proximity?lat=${lat}&lng=${lng}&license_plate=${license_plate}&isVehicle=yes`);
         return {
-            status: response.data.status
+            status: response.data.status,
+            pedestrianInRange: response.data.pedestrianInRange
         }
     } catch (e) {
         console.log(e);
