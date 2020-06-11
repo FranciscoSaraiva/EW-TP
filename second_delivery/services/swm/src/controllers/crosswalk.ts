@@ -10,8 +10,20 @@ const urlVehicle = 'http://localhost:3001/vehicle';
 export async function index(req: Request, res: Response) {
     try {
         let crosswalks: Crosswalk[] = await Crosswalk.find();
+        let response = []
+        for (let i = 0; i < crosswalks.length; i++) {
+            const crosswalk = crosswalks[i];
+            let record: Record = await Record.findOne({ where: { crosswalk } });
+            if (!record) {
+                record = new Record(new Date(), crosswalk)
+                record.setTotalVehicles(0);
+                record.setTotalPedestrians(0);
+                await record.save();
+            }
+            response.push({ crosswalk, record });
+        }
 
-        return res.send(crosswalks);
+        return res.send(response);
     } catch (error) {
         console.log(error);
         return res.status(500).send({ message: "Alguma coisa correu mal ...", error });
@@ -31,7 +43,7 @@ export async function show(req: Request, res: Response) {
         if (pedestrians.data >= 0) {
             for (let i = 0; i < pedestrians.data.length; i++) {
                 const pedestrian = pedestrians.data[i];
-                if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 1000)) {
+                if (checkDistance(crosswalk, pedestrian.lat, pedestrian.lng, 100)) {
                     res_pedestrians.push(pedestrian);
                 }
             }
@@ -40,7 +52,7 @@ export async function show(req: Request, res: Response) {
         if (vehicles.data >= 0) {
             for (let i = 0; i < vehicles.data.length; i++) {
                 const vehicle = vehicles.data[i];
-                if (checkDistance(crosswalk, vehicle.lat, vehicle.lng, 1000)) {
+                if (checkDistance(crosswalk, vehicle.lat, vehicle.lng, 200)) {
                     res_vehicles.push(vehicle);
                 }
             }
@@ -126,7 +138,7 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
          * status -> -1 -> Tem de parar de simular
          */
         let status: number[] = [];
-        // Está proximo mas não tem de parar de simular
+
         let carAllowedToContinue: boolean[] = [];
         let pedestrianInRange: boolean = false;
 
@@ -139,7 +151,6 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
             } else {
                 let pedestrianState: object = await checkForPedestrianState(crosswalk, lat, lng);
                 status.push(pedestrianState['status']);
-                //pedestrianInRange = pedestrianState['pedestrianInRange'];
             }
         }
         if (isVehicle == "yes") {
@@ -149,38 +160,16 @@ export async function checkProximityToContinueSimulating(req: Request, res: Resp
         switch (isVehicle) {
             case "yes":
                 if (status.filter(status => { return status == -1 }).length > 0 || carAllowedToContinue.filter(status => { return status == true }).length > 0) {
-                    /**
-                     * 1º verificar se já existe o carro com aquela matricula na BD
-                     * 1ºa) Se existir apenas se altera as coordenadas
-                     * 2º Se não existir vamos colocar o veiculo na BD naquela posição
-                     */
                     await checkSimulatorContinue(isVehicle, req.query.license_plate.toString(), lat, lng);
                 } else {
-                    /**
-                     * Verificar se o carro ou o pedestre já existe na BD
-                     * Se existir remover 
-                     * Se não descarta e continua  
-                     */
                     await checkDatabaseForEdit(isVehicle, req.query.license_plate.toString());
-                    console.log('entrei no edit carro')
                 }
                 break;
             case "no":
                 if (status.filter(status => { return status == 0 }).length > 0) {
-                    /**
-                     * 1º verificar se já existe o carro com aquela matricula na BD
-                     * 1ºa) Se existir apenas se altera as coordenadas
-                     * 2º Se não existir vamos colocar o veiculo na BD naquela posição
-                     */
                     await checkSimulatorContinue(isVehicle, req.query.name.toString(), lat, lng);
                 } else {
-                    /**
-                     * Verificar se o carro ou o pedestre já existe na BD
-                     * Se existir remover 
-                     * Se não descarta e continua  
-                     */
                     await checkDatabaseForEdit(isVehicle, req.query.name.toString());
-                    console.log('entrei no edit pedestre')
                 }
                 break;
         }
@@ -212,7 +201,6 @@ function checkDistance(crosswalk: Crosswalk, lat: number, lng: number, distance:
     dist = Math.acos(dist);
     dist = dist * 180 / Math.PI;
     dist = dist * 60 * 1.1515;
-    // mile -> meter = 1 609.344
     dist = dist * 1609.344;
     if (dist < distance) {
         return true;
@@ -225,23 +213,18 @@ async function checkForVehicleState(crosswalk: Crosswalk, lat: number, lng: numb
     let carAllowedToContinue: boolean = false;
     if (checkDistance(crosswalk, lat, lng, 200)) {
         if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
-            // está verde para peões
             status = -1;
         } else {
-            // está verde para carros
             status = 0;
         }
         carAllowedToContinue = true;
-        // To Do Alterar isto
-        // Se não existir nenhum Record daquele dia
-        // Deve criar um record novo para aquela crosswalk
-        /*         let record: Record = await Record.findOne({ where: { crosswalk } });
-                if (record) {
-                    record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
-                }
-                else
-                    record = new Record(new Date(), crosswalk);
-                await record.save(); */
+        let record: Record = await Record.findOne({ where: { crosswalk } });
+        if (record) {
+            record.setTotalVehicles(Number(record.getTotalVehicles()) + 1);
+        }
+        else
+            record = new Record(new Date(), crosswalk);
+        await record.save();
     } else {
         status = 0;
     }
@@ -253,22 +236,17 @@ async function checkForPedestrianState(crosswalk: Crosswalk, lat: number, lng: n
     var pedestrianInRange = false;
     if (checkDistance(crosswalk, lat, lng, 100)) {
         if (crosswalk.getState() == -1 || crosswalk.getState() == 0) {
-            // está verde para peões
             status = 0;
         } else {
-            // está verde para carros
             status = -1;
         }
-        // To Do Alterar isto
-        // Se não existir nenhum Record daquele dia
-        // Deve criar um record novo para aquela crosswalk
-        /*         let record: Record = await Record.findOne({ where: { crosswalk } });
-                if (record) {
-                    record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
-                }
-                else
-                    record = new Record(new Date(), crosswalk);
-                await record.save(); */
+        let record: Record = await Record.findOne({ where: { crosswalk } });
+        if (record) {
+            record.setTotalPedestrians(Number(record.getTotalPedestrians()) + 1);
+        }
+        else
+            record = new Record(new Date(), crosswalk);
+        await record.save();
 
         pedestrianInRange = true;
     } else {

@@ -212,43 +212,43 @@ class App extends Component {
 
         if (this.state.crosswalks.length > 0) {
             table = this.state.crosswalks.map((crosswalk) => (
-                <material.TableRow key={crosswalk.id} onClick={() => {
-                    this.changeIdCrosswlak(crosswalk.id)
+                <material.TableRow key={crosswalk.crosswalk.id} onClick={() => {
+                    this.changeIdCrosswlak(crosswalk.crosswalk.id)
                     this.setState({
                         modal: !this.state.modal
                     })
                 }}>
                     <material.TableCell component='th' scope='row'>
-                        {crosswalk.id}
+                        {crosswalk.crosswalk.id}
                     </material.TableCell>
                     <material.TableCell align='right'>
-                        {crosswalk.address}
+                        {crosswalk.crosswalk.address}
                     </material.TableCell>
                     <material.TableCell align='right'>
-                        {crosswalk.lat}
+                        {crosswalk.crosswalk.lat}
                     </material.TableCell>
                     <material.TableCell align='right'>
-                        {crosswalk.lng}
+                        {crosswalk.crosswalk.lng}
                     </material.TableCell>
                     <material.TableCell align='right'>
-                        {this.getCrosswalkState(crosswalk.state)}
+                        {this.getCrosswalkState(crosswalk.crosswalk.state)}
                     </material.TableCell>
                     <material.TableCell align='right'>
-                        0
+                        {crosswalk.record.total_pedestrians}
                     </material.TableCell>
                     <material.TableCell align='right'>
-                        0
+                        {crosswalk.record.total_vehicles}
                     </material.TableCell>
                 </material.TableRow>
             ))
             globalCrosswalks = this.state.crosswalks.map((crosswalk) => {
                 return (
-                    <Marker key={crosswalk.id} position={[crosswalk.lat, crosswalk.lng]} icon={this.getCrosswalkIcon(crosswalk.state)}>
+                    <Marker key={crosswalk.crosswalk.id} position={[crosswalk.crosswalk.lat, crosswalk.crosswalk.lng]} icon={this.getCrosswalkIcon(crosswalk.crosswalk.state)}>
                         <Popup>
                             <span>
-                                <p>Rua: {crosswalk.address}</p>
-                                <p>Lat: {crosswalk.lat}</p>
-                                <p>Lng: {crosswalk.lng}</p>
+                                <p>Rua: {crosswalk.crosswalk.address}</p>
+                                <p>Lat: {crosswalk.crosswalk.lat}</p>
+                                <p>Lng: {crosswalk.crosswalk.lng}</p>
                             </span>
                         </Popup>
                     </Marker>
