@@ -1,12 +1,23 @@
 import axios, { AxiosResponse } from 'axios';
+import Axios from 'axios';
 
 let urlCrosswalk: string = 'http://localhost:3002';
+let urlPedestrian: string = 'http://localhost:3003/pedestrian';
+let urlVehicles: string = 'http://localhost:3001/vehicle';
 
 export async function GetCrosswalks(): Promise<any> {
     try {
         var response: AxiosResponse = await axios.get(`${urlCrosswalk}/crosswalk`);
         var crosswalks: [] = response.data;
-        return crosswalks;
+        response = await axios.get(`${urlPedestrian}`);
+        var pedestrians: [] = response.data;
+        response = await axios.get(`${urlVehicles}`);
+        var vehicles: [] = response.data;
+        return {
+            crosswalks,
+            pedestrians,
+            vehicles
+        };
     } catch (error) {
         console.log(error);
     }
@@ -26,7 +37,7 @@ export async function EditCrosswalk(id: number, obj: {}): Promise<any> {
 }
 
 export async function CreateCrosswalk(crosswalk: {}): Promise<any> {
-    var response: AxiosResponse = await axios.post(urlCrosswalk, crosswalk);
+    var response: AxiosResponse = await axios.post(`${urlCrosswalk}/crosswalk/`, crosswalk);
     var crosswalk: {} = response.data;
     return crosswalk;
 }

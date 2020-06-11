@@ -7,5 +7,6 @@ routes.get('/', crosswalks.index);
 routes.get('/pedestrian-check-coord', crosswalks.pedestrianCheckCoord);
 routes.get('/vehicle-check-coord', crosswalks.vehicleCheckCoord);
 routes.get('/:id', crosswalks.show);
+routes.post('/', crosswalks.create);
 
 export default routes;
