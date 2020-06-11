@@ -30,7 +30,9 @@ class App extends Component {
         axios.get(urlCrosswalk).then((res) => {
             console.log(res.data)
             this.setState({
-                crosswalks: res.data.crosswalks
+                crosswalks: res.data.crosswalks,
+                pedestrians: res.data.pedestrians,
+                vehicles: res.data.vehicles
             })
         }).catch(e => {
             console.log(e)
@@ -39,10 +41,12 @@ class App extends Component {
         setInterval(() => {
             axios.get(urlCrosswalk).then((res) => {
                 this.setState({
-                    crosswalks: res.data.crosswalks
+                    crosswalks: res.data.crosswalks,
+                    pedestrians: res.data.pedestrians,
+                    vehicles: res.data.vehicles
                 })
             });
-        }, 60000);
+        }, 3000);
     }
 
     changeIdCrosswlak = (id) => {
