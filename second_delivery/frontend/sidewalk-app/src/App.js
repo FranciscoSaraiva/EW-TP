@@ -9,7 +9,7 @@ import red from './assets/red.png';
 import green from './assets/green.png';
 import yellow from './assets/yellow.png';
 import person from './assets/person.png';
-import { Modal, ModalBody, Form, Input } from 'reactstrap'
+import { Modal, ModalBody, Form, Input, Alert } from 'reactstrap'
 
 let urlCrosswalk = 'http://localhost:3333/crosswalks/'
 
@@ -297,7 +297,11 @@ class App extends Component {
                 <div className='jumbotron'>
                     <h1 className='display-4'>Crosswalks</h1>
                 </div>
+                <Alert color="primary" style={{ margin: "16px" }}>
+                    Registar uma nova Passadeira
+                </Alert>
                 <div className='d-flex justify-content-center'>
+
                     <Form onSubmit={this.handleSubmit}>
                         <Input
                             type="text"
@@ -338,6 +342,9 @@ class App extends Component {
                         </material.TableBody>
                     </material.Table>
                 </material.TableContainer>
+                <Alert color="primary" style={{ margin: "16px" }}>
+                    Mapa Geral das Crosswalks
+                </Alert>
                 {globalMap}
                 <Modal size="lg" isOpen={this.state.modal} toggle={() => { this.setState({ modal: !this.state.modal }) }} style={{ width: "100vh" }}>
                     <ModalBody>
