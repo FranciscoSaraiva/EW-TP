@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+   spws:
+      image: pg39284/spws-frontend:v1
+      depends_on:
+         - gateway
+      ports:
+         - '3000:3000'
+      stdin_open: true
+      tty: true
+   gateway:
+      build: ./api_gateway
+      image: pg39284/api-gateway:latest
+      ports:
+         - '3333:3333'
+      depends_on:
+         - pedestrian-service
+         - crosswalk-service
+         - vehicle-service
+   vehicle-service:
+      build: ./services/vehicle
+      image: pg39284/vehicle-service:latest
+      ports:
+         - '3001:3001'
+      depends_on:
+         - db
+   crosswalk-service:
+      build: ./services/swm
+      image: pg39284/swm-service:latest
+      ports:
+         - '3002:3002'
+      depends_on:
+         - db
+   pedestrian-service:
+      build: ./services/pedestrian
+      image: pg39284/pedestrian-service:latest
+      ports:
+         - '3003:3003'
+      depends_on:
+         - db
+   db:
+      image: mysql
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      environment:
+         - MYSQL_USER=${DBUSER}
+         - MYSQL_ROOT_PASSWORD=${DBPASSWORD}
+      volumes:
+         - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
+      ports:
+         - '3306:3306'
+      cap_add: [SYS_NICE]
+
+networks:
+   default:
+      name: spws_network

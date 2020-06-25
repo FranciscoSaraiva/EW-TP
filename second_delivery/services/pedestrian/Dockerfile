@@ -1,9 +1,11 @@
 FROM node:10
-WORKDIR /pedestre-service
-COPY package*.json ./
-RUN npm install
+WORKDIR /pedestrian-service
+COPY package.json /pedestrian-service
+RUN npm install && npm install typescript -g && npm audit fix 
 
-COPY . .
+ADD . /pedestrian-service
 
 EXPOSE 3003
+
 CMD [ "npm", "start" ]
+COPY . .

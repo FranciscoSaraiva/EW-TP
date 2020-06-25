@@ -1,10 +1,7 @@
 FROM node:10
 WORKDIR /gateway
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
+COPY ./ /gateway
+RUN npm install && npm audit fix
 EXPOSE 3333
-
-CMD [ "node", "app.ts" ]
+CMD [ "npm", "start" ]
+COPY . .
